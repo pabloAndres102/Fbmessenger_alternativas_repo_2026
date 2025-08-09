@@ -75,7 +75,7 @@ echo 'const allowedExtensions = ' . json_encode($allowedExtensions) . ';';
 echo '</script>';
 
 ?>
-<?php $products = erLhcoreClassModelCatalogProducts::getList(); ?>
+<?php $products = erLhcoreClassModelCatalog::getList(); ?>
 <h6><strong>Nombre de plantilla: </strong><?php echo htmlspecialchars($template['name']) ?></h6>
 <h6><strong>Categoria de plantilla: </strong><span style="color: black;" class="badge badge-secondary"><?php echo htmlspecialchars($template['category']) ?></span></h6>
 <h6><strong>Nombre de plantilla: </strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', $template['language']); ?></h6>
