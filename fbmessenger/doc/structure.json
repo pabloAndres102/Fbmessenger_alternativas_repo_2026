@@ -597,6 +597,12 @@
             },
             "old": []
         },
+        "lh_chat": {
+            "new": {
+                "kanban_id": "ALTER TABLE `lh_chat` ADD COLUMN `kanban_id` INT(11) NULL DEFAULT NULL AFTER `dep_id`;"
+            },
+            "old": []
+        },
         "lhc_fbmessengerwhatsapp_message": {
             "new": {
                 "created_at": "ALTER TABLE `lhc_fbmessengerwhatsapp_message` ADD INDEX `created_at` (`created_at`);",

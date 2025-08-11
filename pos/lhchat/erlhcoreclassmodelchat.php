@@ -32,5 +32,3 @@ $def->properties['kanban_id']->propertyName = 'kanban_id';
 $def->properties['kanban_id']->propertyType = ezcPersistentObjectProperty::PHP_TYPE_INT;
 
 return $def;
-
-?>
