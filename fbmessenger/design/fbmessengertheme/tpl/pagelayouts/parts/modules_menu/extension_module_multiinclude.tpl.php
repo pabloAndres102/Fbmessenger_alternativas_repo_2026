@@ -31,6 +31,11 @@
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/facebook') ?>"><span class="material-icons">group</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Facebook'); ?></a></li>
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/options') ?>"><span class="material-icons">settings</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Configuraciones'); ?></a></li>
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/catalog_products') ?>"><span class="material-icons">inventory</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Catalog'); ?></a></li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/qr') ?>">
+                                <span class="material-icons">qr_code</span>
+                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'QR'); ?>
+                            </a></li>
+
                     </ul>
     </li>
 <?php endif; ?>

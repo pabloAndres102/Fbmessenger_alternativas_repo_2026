@@ -116,7 +116,7 @@ namespace LiveHelperChatExtension\fbmessenger\providers {
             $template_id = json_encode($template_id);
 
             $curl = curl_init();
-            $url = 'https://graph.facebook.com/v20.0/' . $this->whatsapp_business_account_id . '/template_analytics?start=' . $start . '&end=' . $end . '&granularity=DAILY&metric_types=[%22SENT%22%2C%22DELIVERED%22%2C%22READ%22%2C%22CLICKED%22]&template_ids=[' . $template_id . ']&limit=1000';
+            $url = 'https://graph.facebook.com/v22.0/' . $this->whatsapp_business_account_id . '/template_analytics?start=' . $start . '&end=' . $end . '&granularity=DAILY&metric_types=[%22SENT%22%2C%22DELIVERED%22%2C%22READ%22%2C%22CLICKED%22]&template_ids=[' . $template_id . ']&limit=1000';
 
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $url,

@@ -12,56 +12,69 @@
         <input type="submit" class="btn btn-sm btn-secondary" name="Cancel_page" value="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('system/buttons', 'Cancel'); ?>" />
     </div> &nbsp;&nbsp;
     <button type="button" class="btn btn-warning btn-sm" onclick="return previewTemplate()">
-                <i class="material-icons">visibility</i> Previsualizar
+        <i class="material-icons">visibility</i> Previsualizar
     </button>
 
 </form>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Obtiene una referencia al formulario
-    var form = document.querySelector('form');
 
-    // Agrega un evento de escucha para el evento "submit" del formulario
-    form.addEventListener('submit', function(event) {
-        // Obtiene el valor del campo starts_at
-        var startsAtInput = document.getElementById('startDateTime');
-        var startsAtValue = startsAtInput.value;
+        var restricciones = <?php echo json_encode([
+                                'monday'    => ['start' => $restricciones['campaign_monday_start'] ?? '', 'end' => $restricciones['campaign_monday_end'] ?? ''],
+                                'tuesday'   => ['start' => $restricciones['campaign_tuesday_start'] ?? '', 'end' => $restricciones['campaign_tuesday_end'] ?? ''],
+                                'wednesday' => ['start' => $restricciones['campaign_wednesday_start'] ?? '', 'end' => $restricciones['campaign_wednesday_end'] ?? ''],
+                                'thursday'  => ['start' => $restricciones['campaign_thursday_start'] ?? '', 'end' => $restricciones['campaign_thursday_end'] ?? ''],
+                                'friday'    => ['start' => $restricciones['campaign_friday_start'] ?? '', 'end' => $restricciones['campaign_friday_end'] ?? ''],
+                                'saturday'  => ['start' => $restricciones['campaign_saturday_start'] ?? '', 'end' => $restricciones['campaign_saturday_end'] ?? ''],
+                                'sunday'    => ['start' => $restricciones['campaign_sunday_start'] ?? '', 'end' => $restricciones['campaign_sunday_end'] ?? ''],
+                            ]); ?>;
 
-        // Convierte el valor a una fecha JavaScript
-        var startsAtDate = new Date(startsAtValue);
+        var form = document.querySelector('form');
 
-        // Obtiene el día de la semana y la hora del día
-        var dayOfWeek = startsAtDate.getDay(); // 0 para Domingo, 1 para Lunes, ..., 6 para Sábado
-        var hourOfDay = startsAtDate.getHours();
+        form.addEventListener('submit', function(event) {
 
-        // Obtiene la hora actual
-        var currentTime = new Date();
+            var startsAtInput = document.getElementById('startDateTime');
+            var startsAtValue = startsAtInput.value;
 
-        // Verifica las condiciones de validez
-        if (
-            (dayOfWeek >= 1 && dayOfWeek <= 5 && hourOfDay >= 7 && hourOfDay < 19) ||
-            (dayOfWeek == 6 && hourOfDay >= 8 && hourOfDay < 15)
-        ) {
-            // Verifica si la fecha no está en el pasado
-            if (startsAtDate >= currentTime) {
-                // Permite el envío del formulario
+            if (!startsAtValue) {
+                alert('Debes seleccionar una fecha y hora de inicio.');
+                event.preventDefault();
                 return;
-            } else {
-                // Muestra un mensaje de error si la fecha está en el pasado
+            }
+
+            var startsAtDate = new Date(startsAtValue);
+            var currentTime = new Date();
+
+            if (startsAtDate < currentTime) {
                 alert('La fecha de inicio no puede estar en el pasado.');
-                // Evita que el formulario se envíe
+                event.preventDefault();
+                return;
+            }
+
+            var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            var dayName = days[startsAtDate.getDay()];
+            var horaMin = restricciones[dayName].start;
+            var horaMax = restricciones[dayName].end;
+
+            if (!horaMin || !horaMax) {
+                alert('No hay restricción configurada para el día seleccionado: ' + dayName);
+                event.preventDefault();
+                return;
+            }
+
+            var startLimit = new Date(startsAtDate.toDateString() + ' ' + horaMin);
+            var endLimit = new Date(startsAtDate.toDateString() + ' ' + horaMax);
+
+            if (startsAtDate < startLimit || startsAtDate > endLimit) {
+                alert(`La fecha de inicio debe estar entre ${horaMin} y ${horaMax} para el día ${dayName}.`);
                 event.preventDefault();
             }
-        } else {
-            // Muestra un mensaje de error si la fecha y hora no son válidas
-            alert('La fecha de inicio debe ser de Lunes a Viernes de 7:00 a 19:00 y Sábado de 8:00 a 15:00.');
-            // Evita que el formulario se envíe
-            event.preventDefault();
-        }
+        });
     });
-});
-
 </script>
+
 <script>
     function previewTemplate() {
         var selectedTemplate = document.getElementById("template-to-send").value;
@@ -73,7 +86,7 @@
         var texto_header = document.getElementById("field_header_1") ? document.getElementById("field_header_1").value : '';
         var parts = selectedTemplate.split("||");
         var selectedTemplateName = parts[0];
-        var url = '<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/template_table') ?>/' + selectedTemplateName + '/' + texto + '/' + texto2 + '/' + texto3 + '/' + texto4 + '/' + texto5 + '?header='+texto_header;
+        var url = '<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/template_table') ?>/' + selectedTemplateName + '/' + texto + '/' + texto2 + '/' + texto3 + '/' + texto4 + '/' + texto5 + '?header=' + texto_header;
 
 
         if (selectedTemplateName !== "") {

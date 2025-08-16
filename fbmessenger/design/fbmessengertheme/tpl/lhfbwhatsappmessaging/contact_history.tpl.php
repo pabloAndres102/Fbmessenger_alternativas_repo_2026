@@ -1,6 +1,3 @@
-<h1><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Messages history'); ?></h1>
-
-<?php include(erLhcoreClassDesign::designtpl('lhfbwhatsapp/parts/form_filter.tpl.php')); ?>
 
 <?php if (isset($_SESSION['activate'])) {
     echo '<div class="alert alert-success">' . $_SESSION['activate'] . '</div>';
@@ -13,8 +10,30 @@
 }
 ?>
 
+<?php
+$mostrarBoton = false;
 
+foreach ($items as $item) {
+    if (in_array($item->status, [0,1,6])) {
+        $mostrarBoton = true;
+        break; // ya encontramos uno, no hace falta seguir
+    }
+}
+?>
+<h1 class="d-flex justify-content-between align-items-center">
+    <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Contact history'); ?>
 
+    <?php if ($mostrarBoton) : ?>
+        <form action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/contact_history') ?>" method="post" class="mb-0">
+            <input type="hidden" name="phone_off" value="<?php echo $item->phone ?>">
+            <input type="hidden" name="action" value="toggle">
+            <button type="submit" class="btn btn-warning btn-sm" title="Activar o desactivar contacto">
+                <span class="material-icons align-middle">toggle_on</span>
+                <span class="align-middle">Activar / Desactivar</span>
+            </button>
+        </form>
+    <?php endif; ?>
+</h1>
 
 <?php if (isset($items)) : ?>
 
@@ -174,13 +193,6 @@
                         <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Rejected'); ?>
                     <?php elseif ($item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SENT) : ?>
                         <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Sent'); ?>
-                    <?php endif; ?>
-                    <?php if ($item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_REJECTED) : ?>
-                        <form action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/messages') ?>" method="post">
-                            <input type="hidden" name="phone_off" value="<?php echo $item->phone ?>">
-                            <input type="hidden" name="action" value="toggle">
-                            <button type="submit" class="btn btn-danger btn-sm"><span class="material-icons">power_off</span></button>
-                        </form>
                     <?php endif; ?>
                 </td>
                 <td>

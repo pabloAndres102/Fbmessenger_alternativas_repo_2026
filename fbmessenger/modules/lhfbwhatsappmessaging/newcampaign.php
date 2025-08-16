@@ -6,6 +6,15 @@ $item = new LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMess
 $fbOptions = erLhcoreClassModelChatConfig::fetch('fbmessenger_options');
 $data = (array)$fbOptions->data;
 
+$restricciones = [];
+foreach ($data as $key => $value) {
+    if (strpos($key, 'campaign_') === 0) {
+        $restricciones[$key] = $value;
+    }
+}
+
+$tpl->set('restricciones', $restricciones);
+
 if (isset($_POST['Cancel_page'])) {
     erLhcoreClassModule::redirect('fbwhatsappmessaging/campaign');
     exit;

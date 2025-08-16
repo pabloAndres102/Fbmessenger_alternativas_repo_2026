@@ -22,6 +22,11 @@
                     <i class="material-icons"><?php if ($item->disabled == 0) : ?>done<?php else : ?>block<?php endif; ?></i>
                     <button data-success="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Copied'); ?>" title="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Click to copy phone'); ?>" class="mx-0 btn btn-xs btn-link text-muted py-1" data-copy="<?php echo htmlspecialchars($item->phone) ?>" onclick="lhinst.copyContent($(this))" type="button"><i class="material-icons mr-0">content_copy</i></button>
                     <a class="material-icons" style="color: green;" onclick="lhc.revealModal({'url':WWW_DIR_JAVASCRIPT+'fbwhatsappmessaging/modal_recipient/<?php echo $item->id ?>'})">help</a>
+                    <a class="material-icons" style="color: #ffa200ff;"
+                        href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/contact_history') ?>/?phone=<?php echo $item->phone ?>"
+                        title="Historial">
+                        history
+                    </a>
                     <?php if ($item->can_edit) : ?>
                         <button class="m-0 p-0 btn btn-sm btn-link<?php if ($item->disabled == 1) : ?> text-muted<?php endif; ?>" href="#" onclick="return lhc.revealModal({'title' : 'Import', 'height':350, backdrop:true, 'url':'<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/editmailingrecipient') ?>/<?php echo $item->id ?>'})">
                             <span class="material-icons">edit</span><?php echo htmlspecialchars($item->phone) ?><?php $item->phone_recipient != '' ? print ' (' . $item->phone_recipient . ') ' : print ' ' ?><?php echo htmlspecialchars($item->email) ?>

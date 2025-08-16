@@ -13,7 +13,19 @@
     </message>
   </context>
   <context>
-  <name>module/fbmessenger</name>
+  <name>module/fbmessenger</name>Contact history
+<message>
+      <source>Contact history</source>
+      <translation>Historial de contacto</translation>
+    </message>
+   <message>
+      <source>This contact already exists in the selected list!</source>
+      <translation>Este contacto ya existe en esta lista!</translation>
+    </message>
+  <message>
+      <source>Programmed</source>
+      <translation>Programado</translation>
+    </message>
   <message>
       <source>Summary of the last 30 days</source>
       <translation>Resumen de los ultimos 30 dias</translation>

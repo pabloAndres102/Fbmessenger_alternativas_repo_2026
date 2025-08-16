@@ -442,16 +442,29 @@
                         </td>
                         <td>
                             <?php if ($delete_template == true) : ?>
-                                <form method="post" action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/delete') ?>" onsubmit="return confirm('¿Confirmas que quieres eliminar esta plantilla de mensaje? No podrás usar el nombre <?php echo htmlspecialchars($template['name']); ?> para ninguna plantilla de mensaje nueva que crees mientras se elimina.');">
+                                <form method="post"
+                                    action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/delete') ?>"
+                                    style="display:inline-block; margin-right:5px;"
+                                    onsubmit="return confirm('¿Confirmas que quieres eliminar esta plantilla de mensaje? No podrás usar el nombre <?php echo htmlspecialchars($template['name']); ?> para ninguna plantilla de mensaje nueva que crees mientras se elimina.');">
                                     <input type="hidden" name="template_name" value="<?php echo htmlspecialchars_decode($template['name']); ?>">
-                                    <button type="submit" class="btn btn-danger"><span class="material-icons">delete</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Delete'); ?></button>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <span class="material-icons" style="vertical-align: middle;">delete</span>
+                                        <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Delete'); ?>
+                                    </button>
                                 </form>
-                            <?php endif ?>
-                            <form method="get" action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/metric_templates') ?>">
+                            <?php endif; ?>
+
+                            <form method="get"
+                                action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/metric_templates') ?>"
+                                style="display:inline-block;">
                                 <input type="hidden" name="template_id" value="<?php echo htmlspecialchars_decode($template['id']); ?>">
-                                <button type="submit" class="btn btn-info"><span class="material-icons">equalizer</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Metrics'); ?></button>
+                                <button type="submit" class="btn btn-outline-info btn-sm">
+                                    <span class="material-icons" style="vertical-align: middle;">equalizer</span>
+                                    <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Metrics'); ?>
+                                </button>
                             </form>
                         </td>
+
                     </tr>
                 <?php endif; ?>
             <?php endforeach; ?>

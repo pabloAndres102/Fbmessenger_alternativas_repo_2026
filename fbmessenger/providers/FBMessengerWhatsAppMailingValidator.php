@@ -571,21 +571,21 @@ class FBMessengerWhatsAppMailingValidator
         $messageVariables = [];
 
 
-        if(!empty($item->products)){
+        if (!empty($item->products)) {
             $messageVariables = $item->products;
         }
-        if(!empty($item->offer)){
+        if (!empty($item->offer)) {
             $messageVariables = $item->offer;
         }
 
-        if(!empty($item->image_ids)){
+        if (!empty($item->image_ids)) {
             $messageVariables = $item->image_ids;
         }
 
 
 
 
-    
+
 
         for ($i = 0; $i < 6; $i++) {
             if ($form->hasValidData('field_' . $i) && $form->{'field_' . $i}) {
@@ -618,19 +618,19 @@ class FBMessengerWhatsAppMailingValidator
             }
         }
 
-        if(!empty($item->pdf_name)){
+        if (!empty($item->pdf_name)) {
             $messageVariables['nombre_archivo1'] = $item->pdf_name;
         }
-        if(!empty($item->files_campaign)){
+        if (!empty($item->files_campaign)) {
             $messageVariables[] = $item->files_campaign[0]['id'];
         }
-        
+
         $item->message_variables_array = $messageVariables;
         $item->message_variables = json_encode($messageVariables);
         // print_r($messageVariables);
         return $Errors;
     }
- 
+
     public static function validateCampaignRecipient($item)
     {
         $definition = array(
@@ -1018,9 +1018,30 @@ class FBMessengerWhatsAppMailingValidator
             $item->disabled = 0;
         }
 
-        if ($item->id == null && \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::getCount(['filter' => ['phone' => $item->phone]]) == 1) {
-            $Errors[] = \erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'This contact already exists, edit contact and assign it to this list!');
+        if ($item->id == null) {
+            // Buscar contacto por teléfono
+            $contact = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::findOne(['filter' => ['phone' => $item->phone]]);
+
+            if ($contact instanceof \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact) {
+                // Si existe, revisar si ya pertenece a alguna de las listas seleccionadas
+                foreach ($item->ml_ids as $listId) {
+                    $exists = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContactListContact::getCount([
+                        'filter' => [
+                            'contact_id' => $contact->id,
+                            'contact_list_id' => $listId
+                        ]
+                    ]);
+
+                    if ($exists > 0) {
+                        $Errors[] = \erTranslationClassLhTranslation::getInstance()->getTranslation(
+                            'module/fbmessenger',
+                            'This contact already exists in the selected list!'
+                        );
+                    }
+                }
+            }
         }
+
 
         return $Errors;
     }

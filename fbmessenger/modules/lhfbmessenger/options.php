@@ -5,6 +5,9 @@ $tpl = erLhcoreClassTemplate::getInstance('lhfbmessenger/options.tpl.php');
 $fbOptions = erLhcoreClassModelChatConfig::fetch('fbmessenger_options');
 $data = (array)$fbOptions->data;
 
+// Definimos los días aquí para que sean usados en la validación
+$days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+
 if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || isset($_POST['StoreOptionsWhatsAppRemove'])) {
 
     if (!isset($_POST['csfr_token']) || !$currentUser->validateCSFRToken($_POST['csfr_token'])) {
@@ -14,47 +17,50 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
 
     $definition = array(
         'new_chat' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
         ),
         'exclude_workflow' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
         ),
         'app_id' => new ezcInputFormDefinitionElement(
             ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
         ),
         'block_bot' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
         ),
         'priority' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'int'
+            ezcInputFormDefinitionElement::OPTIONAL, 'int'
         ),
         'whatsapp_access_token' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
         ),
         'whatsapp_verify_token' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
         ),
         'whatsapp_business_account_id' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
         ),
         'whatsapp_business_account_phone_number' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
         ),
         'chat_attr' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL,
-            'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
         ),
     );
 
+    // Agregamos validación para cada día
+    foreach ($days as $day) {
+    $definition["campaign_{$day}_start"] = new ezcInputFormDefinitionElement(
+        ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
+    );
+    $definition["campaign_{$day}_end"] = new ezcInputFormDefinitionElement(
+        ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
+    );
+}
+
+
     $form = new ezcInputForm(INPUT_POST, $definition);
+
     $Errors = array();
 
     if ($form->hasValidData('new_chat') && $form->new_chat == true) {
@@ -93,13 +99,11 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
         $data['whatsapp_business_account_phone_number'] = '';
     }
 
-
     if ($form->hasValidData('app_id')) {
         $data['app_id'] = $form->app_id;
     } else {
         $data['app_id'] = '';
     }
-
 
     if ($form->hasValidData('whatsapp_business_account_id')) {
         $data['whatsapp_business_account_id'] = $form->whatsapp_business_account_id;
@@ -119,6 +123,22 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
         $data['chat_attr'] = 0;
     }
 
+    // Guardamos las horas de cada día
+    foreach ($days as $day) {
+    if ($form->hasValidData("campaign_{$day}_start") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_start"})) {
+        $data["campaign_{$day}_start"] = $form->{"campaign_{$day}_start"};
+    } else {
+        $data["campaign_{$day}_start"] = '';
+    }
+
+    if ($form->hasValidData("campaign_{$day}_end") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_end"})) {
+        $data["campaign_{$day}_end"] = $form->{"campaign_{$day}_end"};
+    } else {
+        $data["campaign_{$day}_end"] = '';
+    }
+}
+
+
     $fbOptions->explain = '';
     $fbOptions->type = 0;
     $fbOptions->hidden = 1;
@@ -128,7 +148,6 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
 
     // Update access key instantly
     $incomingWebhook = \erLhcoreClassModelChatIncomingWebhook::findOne(['filter' => ['name' => 'FacebookWhatsApp']]);
-
     if (is_object($incomingWebhook)) {
         $conditionsArray = $incomingWebhook->conditions_array;
         if (isset($conditionsArray['attr']) && is_array($conditionsArray['attr'])) {
@@ -144,7 +163,6 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
         $incomingWebhook->updateThis(['update' => ['configuration']]);
     }
 
-
     if (isset($_POST['StoreOptionsWhatsApp'])) {
         LiveHelperChatExtension\fbmessenger\providers\FBMessengerWhatsAppLiveHelperChatActivator::installOrUpdate();
     }
@@ -159,7 +177,6 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
 $tpl->set('fb_options', $data);
 
 $Result['content'] = $tpl->fetch();
-
 $Result['path'] = array(
     array(
         'url' => erLhcoreClassDesign::baseurl('fbmessenger/index'),

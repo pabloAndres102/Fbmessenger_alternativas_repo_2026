@@ -118,6 +118,11 @@ $ViewList['catalog_products'] = array(
     'uparams' => array(),
     'functions' => array('use_admin'),
 );
+$ViewList['qr'] = array(
+    'params' => array(''),
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
 
 $ViewList['create_product'] = array(
     'params' => array(''),

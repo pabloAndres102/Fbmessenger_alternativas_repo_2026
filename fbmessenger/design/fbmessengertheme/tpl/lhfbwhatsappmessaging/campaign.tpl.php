@@ -5,50 +5,50 @@
 <br>
 <br>
 <?php if (isset($items)) : ?>
-<?php
-// Comprueba si hay un mensaje de éxito en la variable de sesión
-if (isset($_SESSION['activate'])) {
-    echo '<div class="alert alert-success">' . $_SESSION['activate'] . '</div>';
-    // Elimina el mensaje de éxito de la variable de sesión para que no se muestre nuevamente después de la recarga
-    unset($_SESSION['activate']);
-}
+    <?php
+    // Comprueba si hay un mensaje de éxito en la variable de sesión
+    if (isset($_SESSION['activate'])) {
+        echo '<div class="alert alert-success">' . $_SESSION['activate'] . '</div>';
+        // Elimina el mensaje de éxito de la variable de sesión para que no se muestre nuevamente después de la recarga
+        unset($_SESSION['activate']);
+    }
 
-if (isset($_SESSION['create'])) {
-    echo '<div class="alert alert-success">' . $_SESSION['create'] . '</div>';
-    unset($_SESSION['create']);
-}
+    if (isset($_SESSION['create'])) {
+        echo '<div class="alert alert-success">' . $_SESSION['create'] . '</div>';
+        unset($_SESSION['create']);
+    }
 
-// Comprueba si hay un mensaje de error en la variable de sesión
-if (isset($_SESSION['deactivate'])) {
-    echo '<div class="alert alert-warning">' . $_SESSION['deactivate'] . '</div>';
-    // Elimina el mensaje de error de la variable de sesión para que no se muestre nuevamente después de la recarga
-    unset($_SESSION['deactivate']);
-}
+    // Comprueba si hay un mensaje de error en la variable de sesión
+    if (isset($_SESSION['deactivate'])) {
+        echo '<div class="alert alert-warning">' . $_SESSION['deactivate'] . '</div>';
+        // Elimina el mensaje de error de la variable de sesión para que no se muestre nuevamente después de la recarga
+        unset($_SESSION['deactivate']);
+    }
 
-if (isset($_SESSION['email_send_status'])) {
-    $status = $_SESSION['email_send_status']['type'];
-    $message = $_SESSION['email_send_status']['message'];
+    if (isset($_SESSION['email_send_status'])) {
+        $status = $_SESSION['email_send_status']['type'];
+        $message = $_SESSION['email_send_status']['message'];
 
-    // Muestra el mensaje con el fondo correspondiente
-    $alertClass = ($status == 'success') ? 'alert-success' : 'alert-danger';
+        // Muestra el mensaje con el fondo correspondiente
+        $alertClass = ($status == 'success') ? 'alert-success' : 'alert-danger';
 
-    echo '<div class="alert ' . $alertClass . '">' . $message . '</div>';
+        echo '<div class="alert ' . $alertClass . '">' . $message . '</div>';
 
-    // Limpia la variable de sesión para que no se muestre nuevamente después de la recarga
-    unset($_SESSION['email_send_status']);
-}
-?>
+        // Limpia la variable de sesión para que no se muestre nuevamente después de la recarga
+        unset($_SESSION['email_send_status']);
+    }
+    ?>
 
     <table cellpadding="0" cellspacing="0" class="table table-sm table-hover" width="100%" ng-non-bindable>
         <thead>
             <tr>
                 <th width="1%"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'ID'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Name'); ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Owner'); ?></th>
+                <!-- <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Owner'); ?></th> -->
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Type'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Status'); ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Date scheduled'); ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Recipients'); ?></th>
+                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Programmed'); ?></th>
+                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Contacts'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Statistics'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Actions'); ?></th>
                 <th width="1%"></th>
@@ -66,9 +66,9 @@ if (isset($_SESSION['email_send_status'])) {
                         <span class="material-icons">edit_off</span><?php echo htmlspecialchars($item->name) ?>
                     <?php endif; ?>
                 </td>
-                <td>
+                <!-- <td>
                     <?php print_r($item->user->username) ?>
-                </td>
+                </td> -->
                 <td>
                     <?php if ($item->private == LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppCampaign::LIST_PUBLIC) : ?>
                         <span class="material-icons">public</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Public'); ?>
@@ -118,19 +118,32 @@ if (isset($_SESSION['email_send_status'])) {
                         <form action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/togglecampaign') ?>" style="display: inline-block; margin-right: 5px;" method="post">
                             <input type="hidden" name="campaign_id" value="<?php echo $item->id ?>">
                             <input type="hidden" name="action" value="deactivate">
-                            <button type="submit" class="btn btn-secondary btn-sm"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Deactivate'); ?></button>
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                <span class="material-icons" style="vertical-align: middle;">pause_circle</span>
+                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Deactivate'); ?>
+                            </button>
                         </form>
                     <?php else : ?>
                         <form action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/togglecampaign') ?>" method="post" style="display: inline-block; margin-right: 5px;" onsubmit="return validateActivation(<?php echo $item->total_contacts; ?>)">
                             <input type="hidden" name="campaign_id" value="<?php echo $item->id ?>">
                             <input type="hidden" name="action" value="activate">
-                            <button type="submit" class="btn btn-success btn-sm"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Activate'); ?></button>
+                            <button type="submit" class="btn btn-outline-success btn-sm">
+                                <span class="material-icons" style="vertical-align: middle;">play_circle</span>
+                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Activate'); ?>
+                            </button>
                         </form>
                     <?php endif; ?>
+
                     <?php if ($item->can_delete) : ?>
-                        <a class="btn btn-danger btn-sm csfr-post csfr-required" onclick="return confirm('<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('kernel/messages', 'Are you sure?'); ?>')" href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/deletecampaign') ?>/<?php echo $item->id ?>"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Delete'); ?></a>
+                        <a class="btn btn-outline-danger btn-sm csfr-post csfr-required"
+                            onclick="return confirm('<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('kernel/messages', 'Are you sure?'); ?>')"
+                            href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/deletecampaign') ?>/<?php echo $item->id ?>">
+                            <span class="material-icons" style="vertical-align: middle;">delete</span>
+                            <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Delete'); ?>
+                        </a>
                     <?php endif; ?>
                 </td>
+
 
             </tr>
         <?php endforeach; ?>
