@@ -5,6 +5,7 @@ $data = (array)$fbOptions->data;
 $tpl = erLhcoreClassTemplate::getInstance('lhfbwhatsapp/profilebusiness.tpl.php');
 
 $phones = array_map('trim', explode(',', $data['whatsapp_business_account_phone_number']));
+$phoneData = [];
 $tpl->set('phones', $phones);
 
 
@@ -31,6 +32,30 @@ if (isset($_POST['phone'])) {
     curl_close($curl);
     $response_GET = json_decode($response, true);
 }
+
+
+foreach ($phones as $phoneId) {
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://graph.facebook.com/v22.0/".$phoneId."?fields=display_phone_number,verified_name",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            "Authorization: Bearer " . $data['whatsapp_access_token']
+        ],
+    ]);
+    $resp = curl_exec($curl);
+    curl_close($curl);
+
+    $respData = json_decode($resp, true);
+
+    $phoneData[$phoneId] = [
+        'number' => isset($respData['display_phone_number']) ? $respData['display_phone_number'] : 'N/A',
+        'name'   => isset($respData['verified_name']) ? $respData['verified_name'] : 'Sin nombre'
+    ];
+}
+
+$tpl->set('phones', $phones);
+$tpl->set('phoneData', $phoneData);
 
 if ($_POST['about']) {
     $profile_id_phone =  $_POST['phone_profile'];
@@ -156,17 +181,13 @@ if (isset($jsonResponse['error'])) {
     $_SESSION['profile_success'] = 'Se ha actualizado su perfil con exito! ';
 } else {
     $_SESSION['profile_unknown_error'] = $jsonResponse;
-} 
+}
 
 if (isset($jsonResponse)) {
     header('Location: ' . erLhcoreClassDesign::baseurl('fbwhatsapp/profilebusiness'));
 }
 
 $Result['path'] = array(
-    array(
-        'url' => erLhcoreClassDesign::baseurl('fbmessenger/index'),
-        'title' => erTranslationClassLhTranslation::getInstance()->getTranslation('lhelasticsearch/module', 'Facebook Chat')
-    ),
     array(
         'url' => erLhcoreClassDesign::baseurl('fbwhatsapp/profilebusiness'),
         'title' => erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Profile')

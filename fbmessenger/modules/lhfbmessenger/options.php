@@ -124,19 +124,21 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
     }
 
     // Guardamos las horas de cada día
-    foreach ($days as $day) {
+   foreach ($days as $day) {
     if ($form->hasValidData("campaign_{$day}_start") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_start"})) {
         $data["campaign_{$day}_start"] = $form->{"campaign_{$day}_start"};
     } else {
-        $data["campaign_{$day}_start"] = '';
+        $data["campaign_{$day}_start"] = '08:00'; // valor por defecto
     }
 
     if ($form->hasValidData("campaign_{$day}_end") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_end"})) {
         $data["campaign_{$day}_end"] = $form->{"campaign_{$day}_end"};
     } else {
-        $data["campaign_{$day}_end"] = '';
+        $data["campaign_{$day}_end"] = '19:00'; // valor por defecto
     }
 }
+
+
 
 
     $fbOptions->explain = '';

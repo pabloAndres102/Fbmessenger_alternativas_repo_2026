@@ -1,10 +1,39 @@
 <style>
+    .table-custom {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-custom thead {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn-edit {
+        background-color: #007bff;
+        color: white;
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .btn-edit:hover {
+        background-color: #0056b3;
+    }
+
     .custom-card {
         border: 1px solid #ddd;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         background-color: #fff;
     }
+
     .profile-placeholder {
         width: 100px;
         /* Ajusta el tamaño según sea necesario */
@@ -69,46 +98,56 @@
         }
     }
 </style>
-
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="custom-card p-4">
-                <h3 class="text-center mb-4"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Select Phone'); ?></h3>
-                <form method="post" action=<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/profilebusiness') ?>>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Phone'); ?></span>
-                        </div>
-                        <select name="phone" id="phone" class="form-control">
-                            <?php foreach ($phones as $phone) : ?>
-                                <option value="<?php echo htmlspecialchars($phone); ?>">
-                                    <?php echo htmlspecialchars($phone); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons">cloud</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Load Profile'); ?>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <h3 class="text-center mb-4">
+        <span class="material-icons" style="vertical-align: middle; font-size: 28px;">phone_iphone</span>
+        Números disponibles
+    </h3>
+
+    <table class="table table-bordered text-center table-custom">
+        <thead>
+            <tr>
+                <th>Línea (ID)</th>
+                <th>Nombre</th>
+                <th>Número</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($phones as $phoneId): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($phoneId); ?></td>
+                    <td><?php echo htmlspecialchars($phoneData[$phoneId]['name']); ?></td>
+                    <td><?php echo htmlspecialchars($phoneData[$phoneId]['number']); ?></td>
+                    <td>
+                        <form method="post" action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/profilebusiness') ?>">
+                            <input type="hidden" name="phone" value="<?php echo htmlspecialchars($phoneId); ?>">
+                            <button type="submit" class="btn btn-edit btn-sm">
+                                <span class="material-icons" style="vertical-align: middle;">edit</span>
+                                Editar
+                            </button>
+
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+
 </div>
 
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-10 offset-md-2">
-        <div class="col-md-10 custom-card">
+            <div class="col-md-10 custom-card">
                 <?php if (isset($_SESSION['profile_success'])) : ?>
                     <!-- Mostrar mensaje de éxito -->
                     <div class="alert alert-success">
                         <?php echo $_SESSION['profile_success']; ?>
                     </div>
-                    <?php unset($_SESSION['profile_success']); // Limpiar la sesión después de mostrar el mensaje ?>
+                    <?php unset($_SESSION['profile_success']); // Limpiar la sesión después de mostrar el mensaje 
+                    ?>
                 <?php elseif (isset($_SESSION['profile_error'])) : ?>
                     <!-- Mostrar mensaje de error -->
                     <div class="alert alert-danger">
@@ -246,10 +285,7 @@
             <br>
             <br>
         </div>
-            <br>
-            <br>
-        </div>
+        <br>
+        <br>
     </div>
 </div>
-
-</body>

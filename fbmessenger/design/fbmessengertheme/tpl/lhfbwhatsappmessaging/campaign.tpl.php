@@ -45,7 +45,7 @@
                 <th width="1%"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'ID'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Name'); ?></th>
                 <!-- <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Owner'); ?></th> -->
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Type'); ?></th>
+                <!-- <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Type'); ?></th> -->
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Status'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Programmed'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Contacts'); ?></th>
@@ -69,13 +69,13 @@
                 <!-- <td>
                     <?php print_r($item->user->username) ?>
                 </td> -->
-                <td>
+                <!-- <td>
                     <?php if ($item->private == LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppCampaign::LIST_PUBLIC) : ?>
                         <span class="material-icons">public</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Public'); ?>
                     <?php else : ?>
                         <span class="material-icons">vpn_lock</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Private'); ?>
                     <?php endif; ?>
-                </td>
+                </td> -->
                 <td>
                     <?php if ($item->enabled == 0) : ?>
                         <span class="material-icons" title="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Not active'); ?>">hourglass_disabled</span>
@@ -120,7 +120,6 @@
                             <input type="hidden" name="action" value="deactivate">
                             <button type="submit" class="btn btn-outline-secondary btn-sm">
                                 <span class="material-icons" style="vertical-align: middle;">pause_circle</span>
-                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Deactivate'); ?>
                             </button>
                         </form>
                     <?php else : ?>
@@ -129,17 +128,15 @@
                             <input type="hidden" name="action" value="activate">
                             <button type="submit" class="btn btn-outline-success btn-sm">
                                 <span class="material-icons" style="vertical-align: middle;">play_circle</span>
-                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Activate'); ?>
                             </button>
                         </form>
                     <?php endif; ?>
 
                     <?php if ($item->can_delete) : ?>
-                        <a class="btn btn-outline-danger btn-sm csfr-post csfr-required"
+                        <a class="btn btn-outline-danger btn-sm"
                             onclick="return confirm('<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('kernel/messages', 'Are you sure?'); ?>')"
                             href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/deletecampaign') ?>/<?php echo $item->id ?>">
                             <span class="material-icons" style="vertical-align: middle;">delete</span>
-                            <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Delete'); ?>
                         </a>
                     <?php endif; ?>
                 </td>

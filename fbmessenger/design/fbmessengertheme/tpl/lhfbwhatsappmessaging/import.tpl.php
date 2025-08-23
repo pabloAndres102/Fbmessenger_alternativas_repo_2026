@@ -97,16 +97,6 @@
 
 
 
-  <div>
-    <strong>Valores permitidos para la columna <code>status</code>:</strong>
-    <ul class="mb-0">
-      <li><span class="badge bg-secondary">unknown</span></li>
-      <li><span class="badge bg-secondary">unsubscribed</span></li>
-      <li><span class="badge bg-secondary">failed</span></li>
-      <li><span class="badge bg-secondary">active</span></li>
-    </ul>
-  </div>
-
   <br>
 
   <div class="form-group">

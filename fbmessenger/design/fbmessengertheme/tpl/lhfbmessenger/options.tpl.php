@@ -91,13 +91,16 @@
                         <td>
                             <input type="time" step="60" class="form-control form-control-sm"
                                 name="campaign_<?php echo $key; ?>_start"
-                                value="<?php echo isset($fb_options["campaign_{$key}_start"]) ? htmlspecialchars($fb_options["campaign_{$key}_start"]) : ''; ?>">
+                                value="<?php echo isset($fb_options["campaign_{$key}_start"]) && $fb_options["campaign_{$key}_start"] != '' ?
+                                            htmlspecialchars($fb_options["campaign_{$key}_start"]) : '08:00'; ?>">
                         </td>
                         <td>
                             <input type="time" step="60" class="form-control form-control-sm"
                                 name="campaign_<?php echo $key; ?>_end"
-                                value="<?php echo isset($fb_options["campaign_{$key}_end"]) ? htmlspecialchars($fb_options["campaign_{$key}_end"]) : ''; ?>">
+                                value="<?php echo isset($fb_options["campaign_{$key}_end"]) && $fb_options["campaign_{$key}_end"] != '' ?
+                                            htmlspecialchars($fb_options["campaign_{$key}_end"]) : '19:00'; ?>">
                         </td>
+
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -167,15 +170,15 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('input[type="time"]').forEach(function(input) {
-        input.addEventListener('click', function() {
-            if (this.showPicker) {
-                this.showPicker(); // Chrome, Edge, Opera, etc.
-            } else {
-                this.focus(); // Fallback
-            }
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('input[type="time"]').forEach(function(input) {
+            input.addEventListener('click', function() {
+                if (this.showPicker) {
+                    this.showPicker(); // Chrome, Edge, Opera, etc.
+                } else {
+                    this.focus(); // Fallback
+                }
+            });
         });
     });
-});
 </script>

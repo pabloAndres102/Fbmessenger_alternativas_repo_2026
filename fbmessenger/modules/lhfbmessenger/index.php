@@ -403,10 +403,6 @@ while ($currentTimestamp <= $endTimestamp) {
  
 
 
-
-
-
-
     $sentPerDay[] = $sentCount;
     $tpl->set('sentPerDay', $sentPerDay);
     // Obtener los mensajes enviados por día

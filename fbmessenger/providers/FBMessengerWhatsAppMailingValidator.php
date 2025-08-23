@@ -510,27 +510,19 @@ class FBMessengerWhatsAppMailingValidator
 
         if ($form->hasValidData('starts_at')) {
             $starts_at_timestamp = \strtotime($form->starts_at);
-            $dayOfWeek = date('N', $starts_at_timestamp);
-            $hourOfDay = date('H', $starts_at_timestamp);
-            $currentTime = time();
 
-            // Check if it's a valid time and day
-            if (($dayOfWeek >= 1 && $dayOfWeek <= 5 && $hourOfDay >= 7 && $hourOfDay < 19) ||
-                ($dayOfWeek == 6 && $hourOfDay >= 8 && $hourOfDay < 15)
-            ) {
-
-                // Check if it's not a past date
-                if ($starts_at_timestamp >= $currentTime) {
-                    $item->starts_at = $starts_at_timestamp;
-                } else {
-                    $Errors[] = \erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Start date cannot be in the past');
-                }
+            if ($starts_at_timestamp !== false) {
+                $item->starts_at = $starts_at_timestamp;
             } else {
-                $Errors[] = \erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Start date must be from Monday to Friday from 7:00 to 19:00 and Saturday from 8:00 to 15:00.');
+                $Errors[] = \erTranslationClassLhTranslation::getInstance()->getTranslation(
+                    'module/fbmessenger',
+                    'Invalid start date'
+                );
             }
         } else {
             $item->starts_at = 0;
         }
+
 
         if ($form->hasValidData('private') && $form->private == true) {
             $item->private = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppCampaign::LIST_PRIVATE;
@@ -551,7 +543,7 @@ class FBMessengerWhatsAppMailingValidator
         }
 
         if ($form->hasValidData('activate_again') && $form->activate_again == true) {
-            $item->status = \LiveHelperChatExtension\fbmessenger\provider\erLhcoreClassModelMessageFBWhatsAppCampaign::STATUS_PENDING;
+            $item->status = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppCampaign::STATUS_PENDING;
         }
 
         if ($form->hasValidData('phone_sender_id')) {

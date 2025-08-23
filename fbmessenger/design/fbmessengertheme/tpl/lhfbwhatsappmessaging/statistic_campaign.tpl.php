@@ -151,7 +151,7 @@ $tasaRebote = $totalConversations > 0 ? round((($rejectedCount + $pendingCount) 
                 <h1><?php echo $mensajesEnviados; ?></h1>
             </div>
             <div class="recuadro">
-                <p><strong>Tasa de envío (%)</strong></p>
+                <p><strong>Tasa de efectividad (%)</strong></p>
                 <h1><?php echo $tasaEnvio; ?>%</h1>
             </div>
             <div class="recuadro">

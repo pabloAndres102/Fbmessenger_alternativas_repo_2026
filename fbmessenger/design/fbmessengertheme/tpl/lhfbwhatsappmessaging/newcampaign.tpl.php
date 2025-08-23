@@ -53,7 +53,7 @@
                 return;
             }
 
-            var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            var days = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Saturday'];
             var dayName = days[startsAtDate.getDay()];
             var horaMin = restricciones[dayName].start;
             var horaMax = restricciones[dayName].end;

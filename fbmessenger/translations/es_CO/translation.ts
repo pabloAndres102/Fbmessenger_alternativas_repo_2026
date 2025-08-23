@@ -13,7 +13,12 @@
     </message>
   </context>
   <context>
-  <name>module/fbmessenger</name>Contact history
+  <name>module/fbmessenger</name>
+<message>
+      <source>Account</source>
+      <translation>Cuenta</translation>
+    </message>
+  
 <message>
       <source>Contact history</source>
       <translation>Historial de contacto</translation>

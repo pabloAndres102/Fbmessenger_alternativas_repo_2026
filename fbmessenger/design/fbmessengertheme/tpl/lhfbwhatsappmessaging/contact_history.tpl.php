@@ -1,4 +1,3 @@
-
 <?php if (isset($_SESSION['activate'])) {
     echo '<div class="alert alert-success">' . $_SESSION['activate'] . '</div>';
     if (isset($_SESSION['warning'])) {
@@ -14,7 +13,7 @@
 $mostrarBoton = false;
 
 foreach ($items as $item) {
-    if (in_array($item->status, [0,1,6])) {
+    if (in_array($item->status, [0, 1, 6])) {
         $mostrarBoton = true;
         break; // ya encontramos uno, no hace falta seguir
     }
@@ -27,7 +26,11 @@ foreach ($items as $item) {
         <form action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/contact_history') ?>" method="post" class="mb-0">
             <input type="hidden" name="phone_off" value="<?php echo $item->phone ?>">
             <input type="hidden" name="action" value="toggle">
-            <button type="submit" class="btn btn-warning btn-sm" title="Activar o desactivar contacto">
+            <button type="submit"
+                class="btn btn-warning btn-sm"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Este botón aparece porque el contacto tuvo mensajes fallidos, pendientes o rechazados">
                 <span class="material-icons align-middle">toggle_on</span>
                 <span class="align-middle">Activar / Desactivar</span>
             </button>
@@ -53,7 +56,7 @@ foreach ($items as $item) {
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Phone'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Send status'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Programmed'); ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Chat ID'); ?></th>
+                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Chat'); ?></th>
                 <th width="1%"></th>
             </tr>
         </thead>
@@ -229,3 +232,10 @@ foreach ($items as $item) {
         <?php include(erLhcoreClassDesign::designtpl('lhkernel/paginator.tpl.php')); ?>
     <?php endif; ?>
 <?php endif; ?>
+<script>
+    // Activar tooltips de Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
