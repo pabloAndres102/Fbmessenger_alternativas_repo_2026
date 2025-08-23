@@ -10,20 +10,12 @@ $data = (array)$fbOptions->data;
 $token = $data['whatsapp_access_token'];
 $whatsapp_business_account_id = $data['whatsapp_business_account_id'];
 
-
 $department = erLhcoreClassModelDepartament::fetch($item->dep_id);
-
 
 $tpl->set('department', $department->name);
 
-
 $templates = $instance->getTemplates();
 $phones = $instance->getPhones();
-
-
-
-$messages = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::getList(['filter' => ['campaign_id' => $item->id]]);
-
 
 $messages = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::getList([
     'filter' => ['campaign_id' => $item->id]
@@ -47,6 +39,32 @@ foreach ($messages as $msg) {
     }
 }
 
+// Función para formatear tiempo legible
+function formatoTiempo($segundos) {
+    $horas = floor($segundos / 3600);
+    $minutos = floor(($segundos % 3600) / 60);
+    $seg = $segundos % 60;
+
+    $texto = [];
+    if ($horas > 0) $texto[] = $horas . "h";
+    if ($minutos > 0) $texto[] = $minutos . "m";
+    if ($seg > 0 || empty($texto)) $texto[] = $seg . "s";
+
+    return implode(" ", $texto);
+}
+
+// Traducciones de días y meses
+$dias = ["Sunday"=>"Domingo","Monday"=>"Lunes","Tuesday"=>"Martes","Wednesday"=>"Miércoles","Thursday"=>"Jueves","Friday"=>"Viernes","Saturday"=>"Sábado"];
+$meses = ["January"=>"enero","February"=>"febrero","March"=>"marzo","April"=>"abril","May"=>"mayo","June"=>"junio","July"=>"julio","August"=>"agosto","September"=>"septiembre","October"=>"octubre","November"=>"noviembre","December"=>"diciembre"];
+
+// Función para formatear fecha en español
+function fechaEspanol($fecha, $dias, $meses) {
+    $en = date("l, d \d\e F Y", strtotime($fecha));
+    $en = strtr($en, $dias);
+    $en = strtr($en, $meses);
+    return $en;
+}
+
 // Calcular métricas
 if (!empty($tiemposLectura)) {
     $promedio = array_sum($tiemposLectura) / count($tiemposLectura);
@@ -54,19 +72,19 @@ if (!empty($tiemposLectura)) {
     $lenta = max($tiemposLectura);
 
     // Día con mayor interacción
-    arsort($interaccionesPorDia); // ordenar descendente
+    arsort($interaccionesPorDia);
     $diaMayor = key($interaccionesPorDia);
-    $textoDiaMayor = "{$diaMayor} ({$interaccionesPorDia[$diaMayor]} lecturas)";
+    $textoDiaMayor = fechaEspanol($diaMayor, $dias, $meses) . " ({$interaccionesPorDia[$diaMayor]} lecturas)";
 
     // Día con menor interacción
-    asort($interaccionesPorDia); // ordenar ascendente
+    asort($interaccionesPorDia);
     $diaMenor = key($interaccionesPorDia);
-    $textoDiaMenor = "{$diaMenor} ({$interaccionesPorDia[$diaMenor]} lecturas)";
+    $textoDiaMenor = fechaEspanol($diaMenor, $dias, $meses) . " ({$interaccionesPorDia[$diaMenor]} lecturas)";
 
     // Enviar a la vista
-    $tpl->set('promedioLectura', round($promedio, 2));
-    $tpl->set('lecturaRapida', $rapida);
-    $tpl->set('lecturaLenta', $lenta);
+    $tpl->set('promedioLectura', formatoTiempo(round($promedio)));
+    $tpl->set('lecturaRapida', formatoTiempo($rapida));
+    $tpl->set('lecturaLenta', formatoTiempo($lenta));
     $tpl->set('diaMayorInteraccion', $textoDiaMayor);
     $tpl->set('diaMenorInteraccion', $textoDiaMenor);
 } else {
@@ -76,6 +94,8 @@ if (!empty($tiemposLectura)) {
     $tpl->set('diaMayorInteraccion', null);
     $tpl->set('diaMenorInteraccion', null);
 }
+
+
 
 
 
