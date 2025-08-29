@@ -1015,7 +1015,10 @@ class FBMessengerWhatsAppMailingValidator
             $contact = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::findOne(['filter' => ['phone' => $item->phone]]);
 
             if ($contact instanceof \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact) {
-                // Si existe, revisar si ya pertenece a alguna de las listas seleccionadas
+
+                // Heredamos el estado "disabled" si ya existe
+                $item->disabled = $contact->disabled;
+
                 foreach ($item->ml_ids as $listId) {
                     $exists = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContactListContact::getCount([
                         'filter' => [
@@ -1024,6 +1027,7 @@ class FBMessengerWhatsAppMailingValidator
                         ]
                     ]);
 
+                    // Si ya está en la lista, error
                     if ($exists > 0) {
                         $Errors[] = \erTranslationClassLhTranslation::getInstance()->getTranslation(
                             'module/fbmessenger',
@@ -1031,6 +1035,8 @@ class FBMessengerWhatsAppMailingValidator
                         );
                     }
                 }
+
+                $item->existing_contact_id = $contact->id;
             }
         }
 

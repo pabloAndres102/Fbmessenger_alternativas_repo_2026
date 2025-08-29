@@ -8,6 +8,8 @@ $token = $data['whatsapp_access_token'];
 $wbai = $data['whatsapp_business_account_id'];
 
 
+
+
 $instance = \LiveHelperChatExtension\fbmessenger\providers\FBMessengerWhatsAppLiveHelperChat::getInstance();
 $templates = $instance->getTemplates();
 $excludedTemplates = array(
@@ -49,6 +51,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $businessAccount = '';
 }
 
+$filter = array(
+    'filtergte' => array('time' => $startTimestamp),
+    'filterlte' => array('time' => $endTimestamp)
+);
+
+$chatsPorHora = erLhcoreClassChatStatistic::getWorkLoadStatistic(30, $filter);
+$labels = array_map(function ($h) {
+    return str_pad($h, 2, "0", STR_PAD_LEFT) . ":00";
+}, range(0, 23));
+
+$totales   = $chatsPorHora['total'];
+$promedios = $chatsPorHora['byday'];
+$promedios = array_map(function ($val) {
+    return round($val, 2); // dos decimales
+}, $chatsPorHora['byday']);
+$maximos   = array_map(function ($item) {
+    return $item['total_records'];
+}, $chatsPorHora['bydaymax']);
+
+// Enviamos a la vista
+$tpl->set('labels', $labels);
+$tpl->set('totales', $totales);
+$tpl->set('promedios', $promedios);
+$tpl->set('maximos', $maximos);
+
+
+// CHATS SIN RESPUESTA 
+
+$chatsSinRespuesta = erLhcoreClassChatStatistic::getNumberOfChatsPerMonth(
+    $filter,
+    array('charttypes' => array('unanswered'))
+);
+
+$labelsUnanswered = [];
+$totalesUnanswered = [];
+
+foreach ($chatsSinRespuesta as $monthData) {
+    $labelsUnanswered[] = $monthData['month'];  // o 'date', según estructura
+    $totalesUnanswered[] = $monthData['total']; // cantidad de chats sin respuesta
+}
+
+// Pasar a la vista
+$tpl->set('labelsUnanswered', $labelsUnanswered);
+$tpl->set('totalesUnanswered', $totalesUnanswered);
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////
+
+
+
+$workLoadStats = erLhcoreClassChatStatistic::getWorkLoadStatistic(30, $filter);
+
+$topHoras = [];
+foreach ($workLoadStats['total'] as $hora => $cantidad) {
+    $topHoras[] = ['hora' => $hora, 'cantidad' => $cantidad];
+}
+usort($topHoras, fn($a, $b) => $b['cantidad'] <=> $a['cantidad']);
+$tpl->set('topHoras', array_slice($topHoras, 0, 3));
+
+$tpl->set('workLoadStats', $workLoadStats);
+
+// 🔹: obtener promedio de espera por asesor
+
+$statsOperadores = erLhcoreClassChatStatistic::avgWaitTimeyUser(30, $filter);
+
+$asesores = [];
+$promediosEspera = [];
+
+foreach ($statsOperadores as $op) {
+    $user = erLhcoreClassModelUser::fetch($op['user_id']);
+    $asesores[] = $user->name;
+    $promediosEspera[] = round($op['avg_wait_time']); // segundos/minutos según DB
+}
+
+$tpl->set('asesores', $asesores);
+$tpl->set('promediosEspera', $promediosEspera);
+
+
+
+function fechaAmigable($fecha)
+{
+    $dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    $meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+    $timestamp = strtotime($fecha);
+    $diaSemana = $dias[date('w', $timestamp)];
+    $dia = date('d', $timestamp);
+    $mes = $meses[date('n', $timestamp) - 1];
+    $anio = date('Y', $timestamp);
+
+    return "$diaSemana $dia de $mes $anio";
+}
 
 $tpl->set('startTimestamp', $startTimestamp);
 $tpl->set('endTimestamp', $endTimestamp);
@@ -167,7 +270,7 @@ foreach ($messagesPerDay as $day => $messageCount) {
 }
 
 if ($dayWithMostMessages !== null) {
-    $tpl->set('dayWithMostMessages', $dayWithMostMessages);
+    $tpl->set('dayWithMostMessages', fechaAmigable($dayWithMostMessages));
     $tpl->set('maxMessages', $maxMessages);
 }
 
@@ -319,12 +422,12 @@ for ($day = $startTimestamp; $day <= $endTimestamp; $day += 86400) { // Incremen
     if ($dayEngagement > $maxEngagement) {
         $maxEngagement = $dayEngagement;
         $dayWithMaxEngagement = date('Y-m-d', $day); // Formato de fecha Y-m-d
-        $tpl->set('dayWithMaxEngagement', $dayWithMaxEngagement);
+        $tpl->set('dayWithMaxEngagement', fechaAmigable($dayWithMaxEngagement));
     }
     if ($dayEngagement < $minEngagement) {
         $minEngagement = $dayEngagement;
         $dayWithMinEngagement = date('Y-m-d', $day); // Formato de fecha Y-m-d
-        $tpl->set('dayWithMinEngagement', $dayWithMinEngagement);
+        $tpl->set('dayWithMinEngagement', fechaAmigable($dayWithMinEngagement));
     }
 }
 
@@ -351,6 +454,7 @@ $agents = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessa
 $agentArray = [];
 $sentPerDay = [];
 $readPerDay = [];
+$deliveredPerDay = [];
 $messagesByAgent = [];
 $generatedConversationPerDay = [];
 
@@ -391,7 +495,7 @@ while ($currentTimestamp <= $endTimestamp) {
     ]);
 
 
-    
+
     foreach ($agents as $agent) {
         $username = $agent->user->username;
         if (!isset($messagesByAgent[$username])) {
@@ -400,7 +504,7 @@ while ($currentTimestamp <= $endTimestamp) {
             $messagesByAgent[$username]++;
         }
     }
- 
+
 
 
     $sentPerDay[] = $sentCount;
@@ -433,6 +537,8 @@ while ($currentTimestamp <= $endTimestamp) {
             'status' => \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_DELIVERED,
         ]
     ]);
+    $deliveredPerDay[] = $deliveredCount2;
+    $tpl->set('deliveredPerDay', $deliveredPerDay);
 
     $failedCount2 = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::getCount([
         'filtergte' => [

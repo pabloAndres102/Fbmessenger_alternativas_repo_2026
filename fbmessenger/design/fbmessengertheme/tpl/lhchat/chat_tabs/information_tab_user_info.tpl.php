@@ -36,6 +36,7 @@ $items = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessag
 <?php include(erLhcoreClassDesign::designtpl('lhchat/chat_tabs/information_rows/information_order_extension_multiinclude.tpl.php'));?>
 
 <table class="table table-sm table-borderless">
+    <?php include(erLhcoreClassDesign::designtpl('lhchat/chat_tabs/information_rows/whatsapp_functions.tpl.php')); ?>
 <?php foreach ($orderInformation as $buttonData) : ?>
     <?php if ($buttonData['enabled'] == true) : ?>
         <?php if ($buttonData['item'] == 'chat') : ?>
@@ -62,55 +63,7 @@ $items = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessag
         <?php endif;?>
     <?php endif; ?>
 <?php endforeach; ?>
+
 </table>
 
-<td>
 
-<button class="btn btn-success" onclick="return lhc.revealModal({
-                                                                'url': '<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/simple_send'); ?>?phone=<?php echo urlencode($chat->phone); ?>'
-                                                                })">
-    <span class="material-icons">Send</span>
-    <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Send whatsapp template'); ?>
-</button>
-<br><br>
-
-<?php if (!in_array($chat->phone, $phonesArray)) : ?>
-    <button class="btn btn-success" href="#" onclick="return lhc.revealModal({'title' : 'Import', 'height':350, backdrop:true, 'url':'<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/newmailingrecipient') ?>/?contact=<?php echo $chat->phone ?>'})">
-        <span class="material-icons">add</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Add manual contact'); ?>
-    </button><br><br>
-<?php else : ?>
-    <button class="btn btn-success" href="#" onclick="return lhc.revealModal({'title' : 'Import', 'height':350, backdrop:true, 'url':'<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/editmailingrecipient') ?>/?id=<?php echo $id_telefono ?>'})">
-        <span class="material-icons">edit</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Edit'); ?>
-    </button>
-    <?php
-    $contacto = LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::getList(['filter' => ['phone' => $chat->phone]]);
-
-    foreach ($contacto as $i) {
-        $id_contacto = $i->id;
-        $listas = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContactList::getList();
-        $relaciones = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContactListContact::getList(['filter' => ['contact_id' => $id_contacto]]);
-        if (!empty($relaciones)) {
-            foreach ($listas as $lista) {
-                foreach ($relaciones as $relacion) {
-                    if ($relacion->contact_list_id == $lista->id) {
-                        echo '<strong>';
-                        echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Contact list').': ';
-                        echo '</strong>';
-                        echo '<mark>';
-                        echo $lista->name;
-                        echo '</mark>';
-                    }
-                }
-            }
-        }else{
-            echo '<mark>';
-            print_r(erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Contact without list'));
-            echo '</mark>';
-        }
-    }
-
-    ?>
-<?php endif ?>
-<hr style="border: none; height: 2px; background-color: #000; opacity: 1;">
-
-</td>

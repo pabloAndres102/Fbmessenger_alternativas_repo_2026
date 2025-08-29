@@ -14,6 +14,22 @@
   </context>
   <context>
   <name>module/fbmessenger</name>
+  <message>
+      <source>Information</source>
+      <translation>Informacion</translation>
+    </message>
+  <message>
+      <source>Contact lists</source>
+      <translation>Listas de contacto</translation>
+    </message>
+  <message>
+      <source>Send template</source>
+      <translation>Enviar plantilla</translation>
+    </message>
+  <message>
+      <source>WhatsApp Functions</source>
+      <translation>Funciones de whatsapp</translation>
+    </message>
 <message>
       <source>Account</source>
       <translation>Cuenta</translation>

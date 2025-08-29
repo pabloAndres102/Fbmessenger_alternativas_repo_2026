@@ -43,7 +43,7 @@ if (ezcInputForm::hasPostData()) {
     if (!isset($_POST['csfr_token']) || !$currentUser->validateCSFRToken($_POST['csfr_token'])) {
         erLhcoreClassModule::redirect('fbwhatsapp/send');
         exit;
-    } 
+    }
 
     $definition = array(
         'phone' => new ezcInputFormDefinitionElement(
@@ -247,15 +247,14 @@ if (ezcInputForm::hasPostData()) {
 
     $status_contact = LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::getList(['filter' => ['phone' => $item->phone]]);
     foreach ($status_contact as $contact) {
-        if($contact->disabled > 0){
+        if ($contact->disabled > 0) {
             $Errors[] = erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'This contact is deactivated');
         }
-        
     }
 
 
 
- 
+
     if (isset($_POST['nombre_archivo1'])) {
         $item->message_variables_array['nombre_archivo1'] =  $_POST['nombre_archivo1'];
     }
@@ -265,7 +264,7 @@ if (ezcInputForm::hasPostData()) {
 
 
     if (isset($_POST['products'])) {
-        foreach($_POST['products'] as $product){
+        foreach ($_POST['products'] as $product) {
             $item->message_variables_array[] =  $product;
         }
     }
@@ -310,7 +309,7 @@ if (ezcInputForm::hasPostData()) {
                 $curl = curl_init();
                 $phone_numbers = explode(',', $data['whatsapp_business_account_phone_number']);
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://graph.facebook.com/v20.0/' . $phone_numbers[0]. '/media',
+                    CURLOPT_URL => 'https://graph.facebook.com/v20.0/' . $phone_numbers[0] . '/media',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -334,7 +333,6 @@ if (ezcInputForm::hasPostData()) {
                 curl_close($curl);
 
                 $item->message_variables_array[] = $response['id'];
-                
             }
             // print_r('<mark>');
             // print_r($item->message_variables_array);
@@ -391,7 +389,7 @@ if (ezcInputForm::hasPostData()) {
                 }
 
                 $curl = curl_init();
-$phone_numbers = explode(',', $data['whatsapp_business_account_phone_number']);
+                $phone_numbers = explode(',', $data['whatsapp_business_account_phone_number']);
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://graph.facebook.com/v20.0/' . $phone_numbers[0] . '/media',
                     CURLOPT_RETURNTRANSFER => true,
@@ -417,9 +415,7 @@ $phone_numbers = explode(',', $data['whatsapp_business_account_phone_number']);
                 curl_close($curl);
 
                 $item->message_variables_array[] = $response['id'];
-                
             }
-           
         }
     }
 
@@ -430,13 +426,35 @@ $phone_numbers = explode(',', $data['whatsapp_business_account_phone_number']);
             $item->user_id = $currentUser->getUserID();
 
 
-            
 
 
             if ($item->status != \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SCHEDULED) {
                 LiveHelperChatExtension\fbmessenger\providers\FBMessengerWhatsAppLiveHelperChat::getInstance()->sendTemplate($item, $templates, $phones);
                 $item->saveThis();
+
+                // ✅ Nueva lógica: desactivar contacto si falla o es rechazado
+                if (
+                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_PENDING
+                ) {
+                    try {
+                        $contacts = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::getList([
+                            'filter' => ['phone' => $item->phone]
+                        ]);
+
+                        if (!empty($contacts)) {
+                            foreach ($contacts as $contact) {
+                                $contact->disabled = 1; // marcar como desactivado
+                                $contact->delivery_status = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::DELIVERY_STATUS_FAILED;
+                                $contact->updateThis(['update' => ['disabled', 'delivery_status']]);
+                            }
+                        }
+                    } catch (Exception $e) {
+                        error_log("No se pudo desactivar el contacto con teléfono {$item->phone}: " . $e->getMessage());
+                    }
+                }
             }
+
+
 
             if ($item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SCHEDULED) {
                 $campaign = new \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppCampaign();
@@ -471,7 +489,7 @@ $phone_numbers = explode(',', $data['whatsapp_business_account_phone_number']);
                 $campaignRecipient->saveThis();
                 // print_r($campaignRecipient);
             }
-            
+
             $tpl->set('updated', true);
             $fbcommand = json_encode([
                 'template_name' => $item->template,

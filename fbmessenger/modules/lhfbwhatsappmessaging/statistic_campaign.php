@@ -10,6 +10,20 @@ $data = (array)$fbOptions->data;
 $token = $data['whatsapp_access_token'];
 $whatsapp_business_account_id = $data['whatsapp_business_account_id'];
 
+function fechaAmigable($fecha)
+{
+    $dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    $meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+    $timestamp = is_numeric($fecha) ? $fecha : strtotime($fecha); // acepta timestamp o string
+    $diaSemana = $dias[date('w', $timestamp)];
+    $dia = date('j', $timestamp);
+    $mes = $meses[date('n', $timestamp) - 1];
+    $hora = date('H:i', $timestamp);
+
+    return ucfirst("$diaSemana $dia de $mes $hora");
+}
+
 $department = erLhcoreClassModelDepartament::fetch($item->dep_id);
 
 $tpl->set('department', $department->name);
@@ -198,7 +212,7 @@ if (isset($_POST['email'])) {
     header('Location: ' . erLhcoreClassDesign::baseurl('fbwhatsappmessaging/campaign'));
 }
 
-
+$item->starts_at = fechaAmigable($item->starts_at);
 
 $tpl->setArray(array(
     'item' => $item,
