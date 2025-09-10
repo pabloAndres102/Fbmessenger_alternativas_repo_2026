@@ -226,7 +226,7 @@ $respuestasCount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassM
 $tasaRespuesta = $totalConversations > 0 ? round(($respuestasCount / $totalConversations) * 100, 2) : 0;
 
 // 📌 Tasa de rebote = rechazados + pendientes en %
-$tasaRebote = $totalConversations > 0 ? round((($rejectedCount + $pendingCount) / $totalConversations) * 100, 2) : 0;
+$tasaRebote = $totalConversations > 0 ? round((($rejectedCount + $pendingCount + $failedCount) / $totalConversations) * 100, 2) : 0;
 ?>
 
 

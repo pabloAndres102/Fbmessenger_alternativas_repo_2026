@@ -23,6 +23,7 @@ foreach ($phones as $phone) {
         ->writer(new PngWriter())
         ->data($whatsappUrl)
         ->encoding(new Encoding('UTF-8'))
+        ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
         ->size(300)
         ->margin(10)
         ->build();

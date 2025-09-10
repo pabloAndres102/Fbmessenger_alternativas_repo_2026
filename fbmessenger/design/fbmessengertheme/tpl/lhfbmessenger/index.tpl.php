@@ -268,8 +268,8 @@ $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassM
                 <button type="submit" class="recuadro-button">
                     <div class="recuadro">
                         <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Tasa de envio en %'); ?></strong></p>
-                        <?php if (isset($totalRead)) : ?>
-                            <h1><?php echo $totalRead; ?></h1>
+                        <?php if (isset($tasaEnvio)) : ?>
+                            <h1><?php echo $tasaEnvio . '%'; ?></h1>
                             <span class="material-icons">visibility</span>
                             <span class="material-icons icon-top-right icon-trending">trending_up</span>
                         <?php endif; ?>

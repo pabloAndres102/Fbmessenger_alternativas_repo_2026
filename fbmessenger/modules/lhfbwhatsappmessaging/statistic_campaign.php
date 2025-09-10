@@ -164,28 +164,33 @@ $data_x_clicks = $instance->getTemplateMetrics($template_id);
 $clicks_por_boton = [];
 $total_clicks = 0;
 
-// Recorremos cada data_point
+
+$inicio = $item->starts_at - (1 * 24 * 60 * 60);
+$fin = $inicio + (15 * 24 * 60 * 60);
+
 foreach ($data_x_clicks['data'][0]['data_points'] as $point) {
-    if (isset($point['clicked']) && is_array($point['clicked'])) {
-        foreach ($point['clicked'] as $click) {
-            $boton = $click['button_content'];
-            $cantidad = $click['count'];
+    $start_point = $point['start'];
+    $end_point   = $point['end'];
 
-            // Guardar clicks por botón (sumando si ya existe)
-            if (!isset($clicks_por_boton[$boton])) {
-                $clicks_por_boton[$boton] = 0;
+    if ($start_point >= $inicio && $start_point < $fin) {
+    
+        if (isset($point['clicked']) && is_array($point['clicked'])) {
+            foreach ($point['clicked'] as $click) {
+                $boton = $click['button_content'];
+                $cantidad = $click['count'];
+
+
+                if (!isset($clicks_por_boton[$boton])) {
+                    $clicks_por_boton[$boton] = 0;
+                }
+                $clicks_por_boton[$boton] += $cantidad;
+                $total_clicks += $cantidad;
             }
-            $clicks_por_boton[$boton] += $cantidad;
-
-            // Sumar al total
-            $total_clicks += $cantidad;
         }
     }
 }
 
 $tpl->set('clicksPorBoton', $clicks_por_boton);
-
-
 
 
 

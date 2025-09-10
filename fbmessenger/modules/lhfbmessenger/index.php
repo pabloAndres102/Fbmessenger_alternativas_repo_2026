@@ -291,6 +291,18 @@ if ($suma > 0) {
     $engagement = 0;
 }
 
+// Suma de estados para calcular la tasa de envío
+$totalMensajes = $readCount + $sentCount +  $deliveredCount + $failedCount + $rejectedCount;
+
+// Tasa de envío: (entregados + leídos) / total
+if ($totalMensajes > 0) {
+    $tasaEnvio = round((($deliveredCount + $readCount) / $totalMensajes) * 100, 2);
+} else {
+    $tasaEnvio = 0;
+}
+
+$tpl->set('tasaEnvio', $tasaEnvio);
+
 $tpl->set('totalSent', $suma);
 $tpl->set('totalRead', $readCount);
 $tpl->set('engagement', $engagement);
@@ -314,6 +326,7 @@ curl_setopt_array($curl, array(
 ));
 
 $response = curl_exec($curl);
+
 curl_close($curl);
 $json_response = json_decode($response, true);
 
