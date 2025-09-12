@@ -3,7 +3,6 @@
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 
 $instance = \LiveHelperChatExtension\fbmessenger\providers\FBMessengerWhatsAppLiveHelperChat::getInstance();
 
@@ -23,7 +22,6 @@ foreach ($phones as $phone) {
         ->writer(new PngWriter())
         ->data($whatsappUrl)
         ->encoding(new Encoding('UTF-8'))
-        ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
         ->size(300)
         ->margin(10)
         ->build();
