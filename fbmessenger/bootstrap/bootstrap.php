@@ -1,40 +1,40 @@
 <?php
 #[\AllowDynamicProperties]
-class erLhcoreClassExtensionFbmessenger {
-    
-	public function __construct() {
-	    
-	}
-	
-	public function run() {
-		$this->registerAutoload ();
-		
-		$dispatcher = erLhcoreClassChatEventDispatcher::getInstance();
+class erLhcoreClassExtensionFbmessenger
+{
 
-		$dispatcher->listen('chat.customcommand', array(
-		    $this,
-		    'sendTemplate'
-		));
+    public function __construct() {}
 
-		$dispatcher->listen('instance.extensions_structure', array(
-		    $this,
-		    'checkStructure'
-		));
-		
-		$dispatcher->listen('instance.registered.created', array(
-		    $this,
-		    'instanceCreated'
-		));
-		
-		$dispatcher->listen('instance.destroyed', array(
-		    $this,
-		    'instanceDestroyed'
-		));
+    public function run()
+    {
+        $this->registerAutoload();
+
+        $dispatcher = erLhcoreClassChatEventDispatcher::getInstance();
+
+        $dispatcher->listen('chat.customcommand', array(
+            $this,
+            'sendTemplate'
+        ));
+
+        $dispatcher->listen('instance.extensions_structure', array(
+            $this,
+            'checkStructure'
+        ));
+
+        $dispatcher->listen('instance.registered.created', array(
+            $this,
+            'instanceCreated'
+        ));
+
+        $dispatcher->listen('instance.destroyed', array(
+            $this,
+            'instanceDestroyed'
+        ));
 
         // Bot related callbacks
-        $dispatcher->listen('chat.genericbot_set_bot',array(
-                $this,
-                'allowSetBot'
+        $dispatcher->listen('chat.genericbot_set_bot', array(
+            $this,
+            'allowSetBot'
         ));
 
         // WhatsApp Integration
@@ -77,7 +77,7 @@ class erLhcoreClassExtensionFbmessenger {
             $this,
             'fetchMessengerUser'
         ));
-	}
+    }
 
     public function verifyPhoneBeforeSave($params)
     {
@@ -86,8 +86,8 @@ class erLhcoreClassExtensionFbmessenger {
                 $tOptions = \erLhcoreClassModelChatConfig::fetch('fbmessenger_options');
                 $data = (array)$tOptions->data;
                 if (isset($data['whatsapp_business_account_phone_number']) && !empty($data['whatsapp_business_account_phone_number'])) {
-                    $validPhoneNumbers = explode(',',str_replace(' ','',$data['whatsapp_business_account_phone_number']));
-                    if (!in_array($params['chat']->chat_variables_array['iwh_field_2'],$validPhoneNumbers)) {
+                    $validPhoneNumbers = explode(',', str_replace(' ', '', $data['whatsapp_business_account_phone_number']));
+                    if (!in_array($params['chat']->chat_variables_array['iwh_field_2'], $validPhoneNumbers)) {
                         if (erLhcoreClassModelMyFBPage::getCount(['filter' => ['page_id' => 0, 'whatsapp_business_phone_number_id' => (int)$params['chat']->chat_variables_array['iwh_field_2']]]) == 0) {
                             echo json_encode(['error' => true, 'message' => 'Not defined phone number - ' . $params['chat']->chat_variables_array['iwh_field_2']]);
                             exit; // Not supported phone number
@@ -102,7 +102,7 @@ class erLhcoreClassExtensionFbmessenger {
     {
         if (is_object($params['chat']->iwh) && $params['chat']->iwh->scope == 'facebookwhatsappscope') {
             if (isset($params['chat']->chat_variables_array['iwh_field_2'])) {
-                $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$params['chat']->chat_variables_array['iwh_field_2'] . "\"','$')" )));
+                $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$params['chat']->chat_variables_array['iwh_field_2'] . "\"','$')")));
 
                 if (!is_object($businessAccount)) {
                     $businessAccount = erLhcoreClassModelMyFBPage::findOne(['filter' => ['page_id' => 0, 'whatsapp_business_phone_number_id' => (int)$params['chat']->chat_variables_array['iwh_field_2']]]);
@@ -122,11 +122,10 @@ class erLhcoreClassExtensionFbmessenger {
             if (is_object($page)) {
                 self::$currentPage = $page;
                 $attributes = $params['webhook']->attributes;
-                $attributes['access_token']= $page->access_token;
-                $attributes['page_id']= $page->page_id;
+                $attributes['access_token'] = $page->access_token;
+                $attributes['page_id'] = $page->page_id;
                 $params['webhook']->attributes = $attributes;
             }
-
         } else if (is_object($params['chat']->iwh) && $params['chat']->iwh->scope == 'facebookmessengerappscope') {
             $pageId = $params['data']['entry'][0]['id'];
             $page = erLhcoreClassModelMyFBPage::findOne(['filter' => ['page_id' => $pageId]]);
@@ -138,16 +137,17 @@ class erLhcoreClassExtensionFbmessenger {
             if (is_object($page)) {
                 self::$currentPage = $page;
                 $attributes = $params['webhook']->attributes;
-                $attributes['access_token']= $page->access_token;
+                $attributes['access_token'] = $page->access_token;
                 $params['webhook']->attributes = $attributes;
             }
         }
     }
 
-    public function addWhatsAppToken($params) {
+    public function addWhatsAppToken($params)
+    {
         if (is_object($params['chat']->incoming_chat) && $params['chat']->incoming_chat->incoming->scope == 'facebookwhatsappscope') {
             if (isset($params['chat']->chat_variables_array['iwh_field_2'])) {
-                $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$params['chat']->chat_variables_array['iwh_field_2'] . "\"','$')" )));
+                $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$params['chat']->chat_variables_array['iwh_field_2'] . "\"','$')")));
 
                 if (!is_object($businessAccount)) {
                     $businessAccount = erLhcoreClassModelMyFBPage::findOne(['filter' => ['page_id' => 0, 'whatsapp_business_phone_number_id' => (int)$params['chat']->chat_variables_array['iwh_field_2']]]);
@@ -156,7 +156,7 @@ class erLhcoreClassExtensionFbmessenger {
                 // Override only if we found separate business account for that phone number
                 if (is_object($businessAccount)) {
                     $attributes = $params['chat']->incoming_chat->incoming->attributes;
-                    $attributes['access_token']= $businessAccount->access_token;
+                    $attributes['access_token'] = $businessAccount->access_token;
                     $params['chat']->incoming_chat->incoming->attributes = $attributes;
                 }
             }
@@ -170,7 +170,7 @@ class erLhcoreClassExtensionFbmessenger {
 
             if (is_object($page)) {
                 $attributes = $params['chat']->incoming_chat->incoming->attributes;
-                $attributes['access_token']= $page->access_token;
+                $attributes['access_token'] = $page->access_token;
                 $params['chat']->incoming_chat->incoming->attributes = $attributes;
             }
         } else if (is_object($params['chat']->iwh) && $params['chat']->iwh->scope == 'facebookinstagramappscope') {
@@ -180,20 +180,21 @@ class erLhcoreClassExtensionFbmessenger {
 
             if (is_object($page)) {
                 $attributes = $params['chat']->incoming_chat->incoming->attributes;
-                $attributes['access_token']= $page->access_token;
-                $attributes['page_id']= $page->page_id;
+                $attributes['access_token'] = $page->access_token;
+                $attributes['page_id'] = $page->page_id;
                 $params['chat']->incoming_chat->incoming->attributes = $attributes;
             }
         }
     }
 
-    public function sendTemplate($paramsCommand) {
+    public function sendTemplate($paramsCommand)
+    {
         if ($paramsCommand['command'] == '!fbtemplate') {
 
             // !fbtemplate {"template_name":"hello_world","template_lang":"en_us","args":{}}
             // !fbtemplate {"template_name":"quick_reply","template_lang":"en","args":{"field_1":"name","field_header_1":"header"}}
 
-            $paramsTemplate = json_decode($paramsCommand['argument'],true);
+            $paramsTemplate = json_decode($paramsCommand['argument'], true);
 
             $params = $paramsCommand['params'];
 
@@ -206,7 +207,7 @@ class erLhcoreClassExtensionFbmessenger {
                 $instance = LiveHelperChatExtension\fbmessenger\providers\FBMessengerWhatsAppLiveHelperChat::getInstance();
             }
 
-            $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$params['chat']->chat_variables_array['iwh_field_2'] . "\"','$')" )));
+            $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$params['chat']->chat_variables_array['iwh_field_2'] . "\"','$')")));
 
             // Override only if we found separate business account for that phone number
             if (is_object($businessAccount)) {
@@ -236,7 +237,7 @@ class erLhcoreClassExtensionFbmessenger {
                 'status' => erLhcoreClassChatEventDispatcher::STOP_WORKFLOW,
                 'processed' => true,
                 'raw_message' => '!fbtemplate',
-                'process_status' => erTranslationClassLhTranslation::getInstance()->getTranslation('chat/chatcommand', 'Template was send!'). ($this->settings['enable_debug'] == true ? ' '.$item->send_status_raw : '')
+                'process_status' => erTranslationClassLhTranslation::getInstance()->getTranslation('chat/chatcommand', 'Template was send!') . ($this->settings['enable_debug'] == true ? ' ' . $item->send_status_raw : '')
             );
         }
     }
@@ -319,7 +320,7 @@ class erLhcoreClassExtensionFbmessenger {
                         }
 
                         if ($initMessageFound == false) {
-                            $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$changeItem['value']['metadata']["phone_number_id"] . "\"','$')" )));
+                            $businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::findOne(array('filter' => ['active' => 1], 'customfilter' => array("JSON_CONTAINS(`phone_number_ids`,'\"" . (int)$changeItem['value']['metadata']["phone_number_id"] . "\"','$')")));
 
                             // Override only if we found separate business account for that phone number
                             // Or we have linked whats app page
@@ -327,7 +328,7 @@ class erLhcoreClassExtensionFbmessenger {
                                 $params['chat']->dep_id = isset($businessAccount->phone_number_deps_array[(string)$changeItem['value']['metadata']["phone_number_id"]]) ? $businessAccount->phone_number_deps_array[(string)$changeItem['value']['metadata']["phone_number_id"]] : $businessAccount->dep_id;
                             } else {
                                 $businessAccount = erLhcoreClassModelMyFBPage::findOne(['filter' => ['page_id' => 0, 'whatsapp_business_phone_number_id' => (int)$changeItem['value']['metadata']["phone_number_id"]]]);
-                                
+
                                 if (is_object($businessAccount)) {
                                     $params['chat']->dep_id = $businessAccount->dep_id;
                                 }
@@ -367,7 +368,7 @@ class erLhcoreClassExtensionFbmessenger {
                 $messenger = Tgallice\FBMessenger\Messenger::create($chatAttribute['access_token']);
 
                 if ($params['chat']->iwh->scope == 'facebookinstagramappscope') {
-                    $profile = $messenger->getUserProfile($senderId,[
+                    $profile = $messenger->getUserProfile($senderId, [
                         \Tgallice\FBMessenger\Model\UserProfile::INSTAGRAM_NAME,
                         \Tgallice\FBMessenger\Model\UserProfile::PROFILE_PIC
                     ]);
@@ -408,9 +409,8 @@ class erLhcoreClassExtensionFbmessenger {
                     $lead->saveThis();
                 }
 
-               $params['chat']->nick = trim( $lead->first_name . ' ' . $lead->last_name);
-               $params['chat']->updateThis(['update' => ['nick']]);
-
+                $params['chat']->nick = trim($lead->first_name . ' ' . $lead->last_name);
+                $params['chat']->updateThis(['update' => ['nick']]);
             } catch (Exception $e) {
                 erLhcoreClassLog::write($e->getMessage());
             }
@@ -471,7 +471,7 @@ class erLhcoreClassExtensionFbmessenger {
                                 // Insert message as a normal message to the last chat customer had
                                 // In case there is chosen reopen old chat
                                 // Which by the case is the default option of the extension
-                                if (in_array($fbWhatsAppMessage->status,[
+                                if (in_array($fbWhatsAppMessage->status, [
                                     \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_READ
                                 ]) && $fbWhatsAppMessage->chat_id == 0) {
                                     $presentConversation = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::findOne([
@@ -488,7 +488,7 @@ class erLhcoreClassExtensionFbmessenger {
                                     if (is_object($presentConversation)) {
                                         $chat = erLhcoreClassModelChat::fetch($presentConversation->chat_id);
                                         if (is_object($chat)) {
-                                             // Save template message first before saving initial response in the lhc core
+                                            // Save template message first before saving initial response in the lhc core
                                             $msg = new erLhcoreClassModelmsg();
                                             $msg->msg = $fbWhatsAppMessage->message;
                                             $chatId = $msg->chat_id = $chat->id;
@@ -538,11 +538,12 @@ class erLhcoreClassExtensionFbmessenger {
                                             $contact->delivery_status = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::DELIVERY_STATUS_FAILED;
                                         }
 
-                                       if (in_array((int)$fbWhatsAppMessage->status,[
+                                        if (
+                                            in_array((int)$fbWhatsAppMessage->status, [
                                                 \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_READ,
                                                 \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_DELIVERED
                                             ]) &&
-                                            in_array((int)$contact->delivery_status,[
+                                            in_array((int)$contact->delivery_status, [
                                                 \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::DELIVERY_STATUS_FAILED,
                                                 \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::DELIVERY_STATUS_UNKNOWN
                                             ])
@@ -563,7 +564,6 @@ class erLhcoreClassExtensionFbmessenger {
                     }
                 }
             }
-
         } elseif (
             // This is echo message from our own API Call
             ($params['webhook']->scope == 'facebookmessengerappscope' &&
@@ -571,126 +571,128 @@ class erLhcoreClassExtensionFbmessenger {
                 isset($params['data']['entry'][0]['messaging'][0]['message']['app_id']) &&
                 $params['data']['entry'][0]['messaging'][0]['message']['app_id'] == $this->settings['app_settings']['app_id']) ||
             (
-            // This is echo message from our own API Call
-            $params['webhook']->scope == 'facebookinstagramappscope' &&
-            isset($params['data']['entry'][0]['messaging'][0]['message']['is_echo'])
-            // Instagram does not differentiates what app was original message so we don't know was it our message or
-            // message from direct conversation
-            /*isset($params['data']['entry'][0]['messaging'][0]['message']['app_id']) &&
+                // This is echo message from our own API Call
+                $params['webhook']->scope == 'facebookinstagramappscope' &&
+                isset($params['data']['entry'][0]['messaging'][0]['message']['is_echo'])
+                // Instagram does not differentiates what app was original message so we don't know was it our message or
+                // message from direct conversation
+                /*isset($params['data']['entry'][0]['messaging'][0]['message']['app_id']) &&
             $params['data']['entry'][0]['messaging'][0]['message']['app_id'] == $this->settings['app_settings']['app_id']*/
-        )
+            )
         ) {
-           exit;
+            exit;
         }
     }
 
     public static function allowSetBot($params)
     {
-        if (is_object($params['chat']->incoming_chat) &&
-            in_array($params['chat']->incoming_chat->incoming->scope,['facebookmessengerappscope','facebookinstagramappscope']) &&
-            is_object(self::$currentPage) && self::$currentPage->bot_disabled == 1) {
-                return array('status' => erLhcoreClassChatEventDispatcher::STOP_WORKFLOW);
+        if (
+            is_object($params['chat']->incoming_chat) &&
+            in_array($params['chat']->incoming_chat->incoming->scope, ['facebookmessengerappscope', 'facebookinstagramappscope']) &&
+            is_object(self::$currentPage) && self::$currentPage->bot_disabled == 1
+        ) {
+            return array('status' => erLhcoreClassChatEventDispatcher::STOP_WORKFLOW);
         }
     }
 
-	/**
-	 * Checks automated hosting structure
-	 *
-	 * This part is executed once in manager is run this cronjob.
-	 * php cron.php -s site_admin -e instance -c cron/extensions_update
-	 *
-	 * */
-	public function checkStructure()
-	{
-	    erLhcoreClassUpdate::doTablesUpdate(json_decode(file_get_contents('extension/fbmessenger/doc/structure.json'), true));
-	}
+    /**
+     * Checks automated hosting structure
+     *
+     * This part is executed once in manager is run this cronjob.
+     * php cron.php -s site_admin -e instance -c cron/extensions_update
+     *
+     * */
+    public function checkStructure()
+    {
+        erLhcoreClassUpdate::doTablesUpdate(json_decode(file_get_contents('extension/fbmessenger/doc/structure.json'), true));
+    }
 
-	/**
-	 * Used only in automated hosting enviroment
-	 */
-	public function instanceDestroyed($params)
-	{
-	    // Set subdomain manual, so we avoid calling in cronjob
-	    $this->instanceManual = $params['instance'];
-	}
-	
-	/**
-	 * Used only in automated hosting enviroment
-	 */
-	public function instanceCreated($params)
-	{
-	    try {
-	        // Instance created trigger
-	        $this->instanceManual = $params['instance'];
-	
-	        // Just do table updates
-	        erLhcoreClassUpdate::doTablesUpdate(json_decode(file_get_contents('extension/fbmessenger/doc/structure.json'), true));
-	
-	    } catch (Exception $e) {
-	        erLhcoreClassLog::write(print_r($e, true));
-	    }
-	}
+    /**
+     * Used only in automated hosting enviroment
+     */
+    public function instanceDestroyed($params)
+    {
+        // Set subdomain manual, so we avoid calling in cronjob
+        $this->instanceManual = $params['instance'];
+    }
 
-	public function registerAutoload() {
-		spl_autoload_register ( array (
-				$this,
-				'autoload'
-		), true, false );
-	}
-	
-	public function autoload($className) {
-		$classesArray = array (
-				'erLhcoreClassModelFBPage'  => 'extension/fbmessenger/classes/erlhcoreclassmodelfbpage.php',
-				'erLhcoreClassFBValidator'                          => 'extension/fbmessenger/classes/erlhcoreclassfbvalidator.php',
-				'erLhcoreClassModelFBMessengerUser'                 => 'extension/fbmessenger/classes/erlhcoreclassmodelfbuser.php',
-				'erLhcoreClassModelKanban'                          => 'extension/fbmessenger/classes/erlhcoreclassmodelkanban.php',
-                'erLhcoreClassModelCatalog'                         => 'extension/fbmessenger/classes/erlhcoreclassmodelcatalog.php',
-                'erLhcoreClassModelMyFBPage'                        => 'extension/fbmessenger/classes/erlhcoreclassmodelmyfbpage.php',
-				'erLhcoreClassModelFBLead'                          => 'extension/fbmessenger/classes/erlhcoreclassmodelfblead.php',
-				'erLhcoreClassModelFBNotificationSchedule'          => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationschedule.php',
-				'erLhcoreClassModelFBNotificationStatus'            => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationstatus.php',
-				'erLhcoreClassModelFBNotificationScheduleCampaign'  => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationschedulecampaign.php',
-				'erLhcoreClassModelFBNotificationScheduleItem'      => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationscheduleitem.php'
-		);
+    /**
+     * Used only in automated hosting enviroment
+     */
+    public function instanceCreated($params)
+    {
+        try {
+            // Instance created trigger
+            $this->instanceManual = $params['instance'];
 
-		if (key_exists ( $className, $classesArray )) {
-			include_once $classesArray [$className];
-		}
-	}
-	
-	public static function getSession() {
-		if (! isset ( self::$persistentSession )) {
-			self::$persistentSession = new ezcPersistentSession ( ezcDbInstance::get (), new ezcPersistentCodeManager ( './extension/fbmessenger/pos' ) );
-		}
-		return self::$persistentSession;
-	}
+            // Just do table updates
+            erLhcoreClassUpdate::doTablesUpdate(json_decode(file_get_contents('extension/fbmessenger/doc/structure.json'), true));
+        } catch (Exception $e) {
+            erLhcoreClassLog::write(print_r($e, true));
+        }
+    }
 
-	public function __get($var) {
-		switch ($var) {
-			case 'is_active' :
-				return true;
-				;
-				break;
-			
-			case 'settings' :
-				$this->settings = include ('extension/fbmessenger/settings/settings.ini.php');				
-				return $this->settings;
-				break;
-			
-			default :
-				;
-				break;
-		}
-	}
-	
-	private static $persistentSession;
+    public function registerAutoload()
+    {
+        spl_autoload_register(array(
+            $this,
+            'autoload'
+        ), true, false);
+    }
 
-	private $configData = false;
-	
-	private $instanceManual = false;
+    public function autoload($className)
+    {
+        $classesArray = array(
+            'erLhcoreClassModelFBPage'  => 'extension/fbmessenger/classes/erlhcoreclassmodelfbpage.php',
+            'erLhcoreClassFBValidator'                          => 'extension/fbmessenger/classes/erlhcoreclassfbvalidator.php',
+            'erLhcoreClassModelFBMessengerUser'                 => 'extension/fbmessenger/classes/erlhcoreclassmodelfbuser.php',
+            'erLhcoreClassModelKanban'                          => 'extension/fbmessenger/classes/erlhcoreclassmodelkanban.php',
+            'erLhcoreClassModelCatalog'                         => 'extension/fbmessenger/classes/erlhcoreclassmodelcatalog.php',
+            'erLhcoreClassModelMyFBPage'                        => 'extension/fbmessenger/classes/erlhcoreclassmodelmyfbpage.php',
+            'erLhcoreClassModelFBLead'                          => 'extension/fbmessenger/classes/erlhcoreclassmodelfblead.php',
+            'erLhcoreClassModelFBNotificationSchedule'          => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationschedule.php',
+            'erLhcoreClassModelFBNotificationStatus'            => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationstatus.php',
+            'erLhcoreClassModelFBNotificationScheduleCampaign'  => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationschedulecampaign.php',
+            'erLhcoreClassModelFBNotificationScheduleItem'      => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationscheduleitem.php',
+            'erLhcoreClassModelMessageFBWhatsAppTemplate'       => 'extension/fbmessenger/classes/erlhcoreclassmodelmessagefbwhatsappTemplate.php',
+        );
+
+        if (key_exists($className, $classesArray)) {
+            include_once $classesArray[$className];
+        }
+    }
+
+    public static function getSession()
+    {
+        if (! isset(self::$persistentSession)) {
+            self::$persistentSession = new ezcPersistentSession(ezcDbInstance::get(), new ezcPersistentCodeManager('./extension/fbmessenger/pos'));
+        }
+        return self::$persistentSession;
+    }
+
+    public function __get($var)
+    {
+        switch ($var) {
+            case 'is_active':
+                return true;;
+                break;
+
+            case 'settings':
+                $this->settings = include('extension/fbmessenger/settings/settings.ini.php');
+                return $this->settings;
+                break;
+
+            default:;
+                break;
+        }
+    }
+
+    private static $persistentSession;
+
+    private $configData = false;
+
+    private $instanceManual = false;
 
     public static $typePage = 1;
     public static $currentPage = null;
 }
-
-

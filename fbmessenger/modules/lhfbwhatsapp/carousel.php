@@ -193,6 +193,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['api_error'] = $jsonresponse;
     } else {
         $_SESSION['api_response'] = $jsonresponse;
+
+        // 🚀 Guardar también en la tabla local con fecha de creación
+        $tplRecord = new erLhcoreClassModelMessageFBWhatsAppTemplate();
+        $tplRecord->name = $templateName;
+        $tplRecord->category = $templateCat;
+        $tplRecord->language = $language;
+        $tplRecord->type = 'carousel';
+        $tplRecord->created_at = time(); // timestamp actual
+        $tplRecord->saveThis();
     }
     header('Location: ' . erLhcoreClassDesign::baseurl('fbwhatsapp/templates'));
 }

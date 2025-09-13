@@ -256,6 +256,7 @@
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('abstract/proactivechatinvitation', 'Category') ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Template type') ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('file/file', 'Content') ?></th>
+                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Fecha de creación'); ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/pendingchats', 'Status') ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Idioma') ?></th>
                 <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Actions') ?></th>
@@ -391,6 +392,14 @@
                             </div>
                         </td>
                         <td>
+                            <?php if (isset($template['created_at'])) : ?>
+                                <?php echo gmdate('Y-m-d H:i:s', $template['created_at'] - (5 * 3600)); ?>
+                            <?php else : ?>
+                                Fuera de rango
+                            <?php endif; ?>
+                        </td>
+
+                        <td>
                             <?php
                             $status = htmlspecialchars($template['status']);
                             $translation = erTranslationClassLhTranslation::getInstance();
@@ -441,18 +450,18 @@
                             <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', $template['language']); ?>
                         </td>
                         <td>
-                            <?php if ($delete_template == true) : ?>
-                                <form method="post"
-                                    action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/delete') ?>"
-                                    style="display:inline-block; margin-right:5px;"
-                                    onsubmit="return confirm('¿Confirmas que quieres eliminar esta plantilla de mensaje? No podrás usar el nombre <?php echo htmlspecialchars($template['name']); ?> para ninguna plantilla de mensaje nueva que crees mientras se elimina.');">
-                                    <input type="hidden" name="template_name" value="<?php echo htmlspecialchars_decode($template['name']); ?>">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                                        <span class="material-icons" style="vertical-align: middle;">delete</span>
-                                        <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Delete'); ?>
-                                    </button>
-                                </form>
-                            <?php endif; ?>
+
+                            <form method="post"
+                                action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/delete') ?>"
+                                style="display:inline-block; margin-right:5px;"
+                                onsubmit="return confirm('¿Confirmas que quieres eliminar esta plantilla de mensaje? No podrás usar el nombre <?php echo htmlspecialchars($template['name']); ?> para ninguna plantilla de mensaje nueva que crees mientras se elimina.');">
+                                <input type="hidden" name="template_name" value="<?php echo htmlspecialchars_decode($template['name']); ?>">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <span class="material-icons" style="vertical-align: middle;">delete</span>
+                                    <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Delete'); ?>
+                                </button>
+                            </form>
+
 
                             <form method="get"
                                 action="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/metric_templates') ?>"

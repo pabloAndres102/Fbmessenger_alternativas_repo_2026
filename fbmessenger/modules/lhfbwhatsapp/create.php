@@ -420,7 +420,19 @@ $urlButtons = [];
     $_SESSION['api_error'] = $jsonresponse;
   } else {
     $_SESSION['api_response'] = $jsonresponse;
-  }
+
+    // Guardar en base de datos
+    $template = new erLhcoreClassModelMessageFBWhatsAppTemplate();
+    $template->name        = $templateName;
+    $template->template_id = $jsonresponse['id'] ?? ''; // el ID que devuelve la API
+    $template->language    = $language;
+    $template->category    = $templateCat;
+    $template->components  = json_encode($components, JSON_UNESCAPED_UNICODE);
+    $template->created_at  = time();
+    $template->updated_at  = time();
+    $template->user_id     = erLhcoreClassUser::instance()->getUserID();
+    $template->saveThis();   // 👈 importante: SIN parámetros
+}
 
   header('Location: ' . erLhcoreClassDesign::baseurl('fbwhatsapp/templates'));
 }
