@@ -17,6 +17,32 @@ $ViewList['indicators'] = array(
     'functions' => array('use_admin'),
 );
 
+$ViewList['sendsms'] = array(
+    'params' => array(''), 
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
+$ViewList['campaignsms'] = array(
+    'params' => array(''), 
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
+
+$ViewList['list_campaign_sms'] = array(
+    'params' => array(''), 
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
+
+$ViewList['sms_history'] = array(
+    'params' => array(''), 
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
 
 $ViewList['activatecatalog'] = array(
     'params' => array(),

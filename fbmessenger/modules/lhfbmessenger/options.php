@@ -6,7 +6,7 @@ $fbOptions = erLhcoreClassModelChatConfig::fetch('fbmessenger_options');
 $data = (array)$fbOptions->data;
 
 // Definimos los días aquí para que sean usados en la validación
-$days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+$days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || isset($_POST['StoreOptionsWhatsAppRemove'])) {
 
@@ -17,46 +17,66 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
 
     $definition = array(
         'new_chat' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'boolean'
         ),
         'exclude_workflow' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'boolean'
         ),
         'app_id' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
         ),
         'block_bot' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'boolean'
         ),
         'priority' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'int'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'int'
         ),
         'whatsapp_access_token' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
         ),
         'whatsapp_verify_token' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
         ),
         'whatsapp_business_account_id' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
         ),
         'whatsapp_business_account_phone_number' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
         ),
         'chat_attr' => new ezcInputFormDefinitionElement(
-            ezcInputFormDefinitionElement::OPTIONAL, 'boolean'
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'boolean'
+        ),
+        'aws_key' => new ezcInputFormDefinitionElement(
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
+        ),
+        'aws_secret' => new ezcInputFormDefinitionElement(
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
         ),
     );
 
     // Agregamos validación para cada día
     foreach ($days as $day) {
-    $definition["campaign_{$day}_start"] = new ezcInputFormDefinitionElement(
-        ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
-    );
-    $definition["campaign_{$day}_end"] = new ezcInputFormDefinitionElement(
-        ezcInputFormDefinitionElement::OPTIONAL, 'unsafe_raw'
-    );
-}
+        $definition["campaign_{$day}_start"] = new ezcInputFormDefinitionElement(
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
+        );
+        $definition["campaign_{$day}_end"] = new ezcInputFormDefinitionElement(
+            ezcInputFormDefinitionElement::OPTIONAL,
+            'unsafe_raw'
+        );
+    }
 
 
     $form = new ezcInputForm(INPUT_POST, $definition);
@@ -123,20 +143,36 @@ if (isset($_POST['StoreOptions']) || isset($_POST['StoreOptionsWhatsApp']) || is
         $data['chat_attr'] = 0;
     }
 
-    // Guardamos las horas de cada día
-   foreach ($days as $day) {
-    if ($form->hasValidData("campaign_{$day}_start") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_start"})) {
-        $data["campaign_{$day}_start"] = $form->{"campaign_{$day}_start"};
+    if ($form->hasValidData('aws_key')) {
+        $data['aws_key'] = $form->aws_key;
     } else {
-        $data["campaign_{$day}_start"] = '08:00'; // valor por defecto
+        $data['aws_key'] = '';
     }
 
-    if ($form->hasValidData("campaign_{$day}_end") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_end"})) {
-        $data["campaign_{$day}_end"] = $form->{"campaign_{$day}_end"};
+    if ($form->hasValidData('aws_secret')) {
+        $data['aws_secret'] = $form->aws_secret;
     } else {
-        $data["campaign_{$day}_end"] = '19:00'; // valor por defecto
+        $data['aws_secret'] = '';
     }
-}
+
+
+
+
+
+    // Guardamos las horas de cada día
+    foreach ($days as $day) {
+        if ($form->hasValidData("campaign_{$day}_start") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_start"})) {
+            $data["campaign_{$day}_start"] = $form->{"campaign_{$day}_start"};
+        } else {
+            $data["campaign_{$day}_start"] = '08:00'; // valor por defecto
+        }
+
+        if ($form->hasValidData("campaign_{$day}_end") && preg_match('/^\d{2}:\d{2}$/', $form->{"campaign_{$day}_end"})) {
+            $data["campaign_{$day}_end"] = $form->{"campaign_{$day}_end"};
+        } else {
+            $data["campaign_{$day}_end"] = '19:00'; // valor por defecto
+        }
+    }
 
 
 

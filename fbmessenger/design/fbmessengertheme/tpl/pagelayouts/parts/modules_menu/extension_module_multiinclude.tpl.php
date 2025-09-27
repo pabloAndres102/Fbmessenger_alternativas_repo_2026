@@ -35,7 +35,31 @@
                                 <span class="material-icons">qr_code</span>
                                 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'QR'); ?>
                             </a></li>
-
                     </ul>
+                    <ul class="nav nav-second-level collapse show">
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="material-icons">domain</span><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'SMS'); ?></strong></li>
+
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/sendsms') ?>">
+                                <span class="material-icons">sms</span>
+                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Envios simples'); ?>
+                            </a>
+                        </li>
+
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/list_campaign_sms') ?>">
+                                <span class="material-icons">campaign</span>
+                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Campañas'); ?>
+                            </a>
+                        </li>
+
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/sms_history') ?>">
+                                <span class="material-icons">bar_chart</span>
+                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Reportes'); ?>
+                            </a>
+                        </li>
+                    </ul>
+
     </li>
 <?php endif; ?>

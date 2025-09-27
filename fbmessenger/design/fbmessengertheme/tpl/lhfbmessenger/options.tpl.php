@@ -32,6 +32,31 @@
         <p><i><small>Facebook user name and surname will be shown as chat attributes.</small></i></p>
     </div>
 
+    <h3 class="attr-header">AWS Options</h3>
+
+    <div class="form-group">
+        <label>
+            Access Key
+        </label>
+        <input class="form-control form-control-sm"
+            type="text"
+            name="aws_key"
+            value="<?php (isset($fb_options['aws_key'])) ? print htmlspecialchars($fb_options['aws_key']) : print '' ?>"
+            placeholder="Ej: AKIAIOSFODNN7EXAMPLE" />
+    </div>
+
+    <div class="form-group">
+        <label>
+            Secret Key
+        </label>
+        <input class="form-control form-control-sm"
+            type="password"
+            name="aws_secret"
+            value="<?php (isset($fb_options['aws_secret'])) ? print htmlspecialchars($fb_options['aws_secret']) : print '' ?>"
+            placeholder="Ej: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" />
+    </div>
+
+
     <h3 class="attr-header">WhatsApp options</h3>
 
     <div class="form-group">

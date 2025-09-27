@@ -654,7 +654,10 @@ class erLhcoreClassExtensionFbmessenger
             'erLhcoreClassModelFBNotificationStatus'            => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationstatus.php',
             'erLhcoreClassModelFBNotificationScheduleCampaign'  => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationschedulecampaign.php',
             'erLhcoreClassModelFBNotificationScheduleItem'      => 'extension/fbmessenger/classes/erlhcoreclassmodelfbnotificationscheduleitem.php',
-            'erLhcoreClassModelMessageFBWhatsAppTemplate'       => 'extension/fbmessenger/classes/erlhcoreclassmodelmessagefbwhatsappTemplate.php',
+            'erLhcoreClassModelMessageFBWhatsAppTemplate'       => 'extension/fbmessenger/classes/erlhcoreclassmodelmessagefbwhatsapptemplate.php',
+            'erLhcoreClassModelSms'                             => 'extension/fbmessenger/classes/erlhcoreclassmodelsms.php',
+            'erLhcoreClassModelSmsCampaign'                     => 'extension/fbmessenger/classes/erlhcoreclassmodelsmscampaign.php',
+
         );
 
         if (key_exists($className, $classesArray)) {
