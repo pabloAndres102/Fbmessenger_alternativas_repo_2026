@@ -434,7 +434,8 @@ if (ezcInputForm::hasPostData()) {
 
                 // ✅ Nueva lógica: desactivar contacto si falla o es rechazado
                 if (
-                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_PENDING
+                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_FAILED ||
+                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_REJECTED
                 ) {
                     try {
                         $contacts = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::getList([
