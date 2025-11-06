@@ -126,7 +126,14 @@ if ($searchName || $searchStatus || $searchCategory || $searchLanguage) {
 $filteredTemplates = array_slice($filteredTemplates, $pages->low, $pages->items_per_page);
 $pages->translationContext = 'chat/activechats';
 $pages->serverURL = erLhcoreClassDesign::baseurl('fbwhatsapp/templates');
-$pages->paginate();
+if ($templateCount > 0) {
+    $pages->paginate();
+} else {
+    $pages->items_total = 0;
+    $pages->setItemsPerPage(1); // valor dummy
+    $pages->low = 0;
+    $pages->items_per_page = 0;
+}
 
 $tpl->set('pages', $pages);
 $tpl->set('templates', $filteredTemplates);

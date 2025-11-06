@@ -88,49 +88,6 @@
         Deja los campos vacíos si no quieres restricción ese día.
     </p>
 
-    <?php
-    $dias = [
-        'monday' => 'Lunes',
-        'tuesday' => 'Martes',
-        'wednesday' => 'Miércoles',
-        'thursday' => 'Jueves',
-        'friday' => 'Viernes',
-        'saturday' => 'Sábado',
-        'sunday' => 'Domingo'
-    ];
-    ?>
-
-    <div class="table-responsive">
-        <table class="table table-sm table-bordered">
-            <thead>
-                <tr>
-                    <th>Día</th>
-                    <th>Hora inicio</th>
-                    <th>Hora fin</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($dias as $key => $label) : ?>
-                    <tr>
-                        <td><strong><?php echo $label; ?></strong></td>
-                        <td>
-                            <input type="time" step="60" class="form-control form-control-sm"
-                                name="campaign_<?php echo $key; ?>_start"
-                                value="<?php echo isset($fb_options["campaign_{$key}_start"]) && $fb_options["campaign_{$key}_start"] != '' ?
-                                            htmlspecialchars($fb_options["campaign_{$key}_start"]) : '08:00'; ?>">
-                        </td>
-                        <td>
-                            <input type="time" step="60" class="form-control form-control-sm"
-                                name="campaign_<?php echo $key; ?>_end"
-                                value="<?php echo isset($fb_options["campaign_{$key}_end"]) && $fb_options["campaign_{$key}_end"] != '' ?
-                                            htmlspecialchars($fb_options["campaign_{$key}_end"]) : '19:00'; ?>">
-                        </td>
-
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
     <hr>
 
 

@@ -124,8 +124,12 @@
                     question_mark
                 </span>Ver ejemplo</a>
             <div id="imageContainer" style="display: none;">
-                <img id="imageToShow" src="https://scontent.feoh3-1.fna.fbcdn.net/v/t39.2365-6/400516056_3407655096213958_4402509594423009060_n.png?stp=dst-webp&_nc_cat=102&ccb=1-7&_nc_sid=e280be&_nc_ohc=iMKZY8354OsAb7tMK3s&_nc_ht=scontent.feoh3-1.fna&oh=00_AfDtWdk_5n-gKM1BjobLhgBrH9wbwLYAFr6w11qN5X8Tsg&oe=6640B36E" alt="Imagen">
+                <img id="imageToShow"
+                    src="<?php echo erLhcoreClassDesign::design('images/carousel_example.jpg'); ?>"
+                    alt="Imagen de ejemplo del carrusel"
+                    class="img-fluid rounded shadow-sm">
             </div>
+
         </div>
         <br>
         <div class="mb-3" style="display: flex;">

@@ -26,6 +26,18 @@ $fieldsSearch['delivery_status'] = array (
     )
 );
 
+$fieldsSearch['enabled'] = array(
+    'type' => 'text',
+    'trans' => 'Enabled',
+    'required' => false,
+    'valid_if_filled' => false,
+    'filter_type' => false, // lo filtramos manualmente en el controlador
+    'filter_table_field' => 'disabled', // campo real en la base de datos
+    'validation_definition' => new ezcInputFormDefinitionElement(
+        ezcInputFormDefinitionElement::OPTIONAL, 'string'
+    )
+);
+
 $fieldsSearch['name'] = array (
     'type' => 'text',
     'trans' => 'Name',

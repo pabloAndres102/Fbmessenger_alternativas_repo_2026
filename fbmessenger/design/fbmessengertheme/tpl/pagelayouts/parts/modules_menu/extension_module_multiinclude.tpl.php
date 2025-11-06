@@ -35,6 +35,19 @@
                                 <span class="material-icons">qr_code</span>
                                 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'QR'); ?>
                             </a></li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsappmessaging/restrictions') ?>">
+                                <span class="material-icons">block</span>
+                                <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Restrictions'); ?>
+                            </a>
+                        </li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/validator') ?>">
+            <span class="material-icons">verified_user</span>
+            <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Validator'); ?>
+        </a>
+    </li>
+
                     </ul>
                     <ul class="nav nav-second-level collapse show">
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="material-icons">domain</span><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'SMS'); ?></strong></li>

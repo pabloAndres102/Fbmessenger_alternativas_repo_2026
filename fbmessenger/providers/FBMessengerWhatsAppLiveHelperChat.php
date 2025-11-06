@@ -214,6 +214,41 @@ namespace LiveHelperChatExtension\fbmessenger\providers {
                                 ]
                             ];
                         }
+
+                        if ($button['type'] == 'URL') {
+                            $paramValue = null;
+
+                            // Campo explícito field_button_X
+                            $key = 'field_button_' . ($indexButton + 1);
+                            if (!empty($item->message_variables_array[$key])) {
+                                $paramValue = $item->message_variables_array[$key];
+                            }
+
+                            // Si la plantilla contiene un {{1}} en el botón
+                            $templateHasPlaceholder = isset($button['url']) && strpos($button['url'], '{{1}}') !== false;
+
+                            // Si hay parámetro o placeholder, se envía el componente
+                            if ($templateHasPlaceholder || $paramValue !== null) {
+                                $bodyArguments[] = [
+                                    "type" => "button",
+                                    "sub_type" => "url",
+                                    "index" => (int)$indexButton,
+                                    "parameters" => [
+                                        [
+                                            "type" => "text",
+                                            "text" => (string)$paramValue
+                                        ]
+                                    ]
+                                ];
+                            }
+                            // ⚠️ Si no hay placeholder ni variable, no agregamos el botón
+                        }
+
+
+
+
+
+
                         if ($button['type'] == 'CATALOG') {
                             $bodyArguments[] = [
                                 "type" => "button",
@@ -267,6 +302,7 @@ namespace LiveHelperChatExtension\fbmessenger\providers {
                     // fwrite($logFile, "Message variables: " . print_r($item->message_variables, true) . "\n");
                     // fwrite($logFile, "MESSAGE VARIABLES ARRAY: " . print_r($item->message_variables_array, true) . "\n");
 
+                    // print_r($item->message_variables_array[0]);
 
                     $parameters = [
                         [

@@ -16,6 +16,8 @@ $ViewList['carousel'] = array(
     'functions' => array('use_admin'),
 );
 
+
+
 $ViewList['updateflow'] = array(
     'params' => array(),
     'uparams' => array(),
@@ -34,6 +36,23 @@ $ViewList['analytics'] = array(
     'functions' => array('use_admin'),
 );
 
+$ViewList['validate_number'] = array(
+    'params' => array(),
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
+$ViewList['validate_email'] = array(
+    'params' => array(),
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
+$ViewList['validator'] = array(
+    'params' => array(),
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
 
 $ViewList['metric_templates'] = array(
     'params' => array(),

@@ -175,6 +175,12 @@ if (ezcInputForm::hasPostData()) {
     if ($form->hasValidData('products')) {
         $item->products = $form->products;
     }
+    for ($i = 0; $i < 6; $i++) {
+        if ($form->hasValidData('field_button_' . $i) && $form->{'field_button_' . $i}) {
+            $messageVariables['field_button_' . $i] = $form->{'field_button_' . $i};
+        }
+    }
+
 
     if ($form->hasValidData('dep_id')) {
         $item->dep_id = $form->dep_id;
@@ -266,6 +272,12 @@ if (ezcInputForm::hasPostData()) {
     if (isset($_POST['products'])) {
         foreach ($_POST['products'] as $product) {
             $item->message_variables_array[] =  $product;
+        }
+    }
+
+    for ($i = 0; $i < 6; $i++) {
+        if (isset($_POST['field_button_' . $i]) && $_POST['field_button_' . $i] !== '') {
+            $item->message_variables_array[] = $_POST['field_button_' . $i];
         }
     }
     if (isset($_POST['offert'])) {
@@ -434,8 +446,7 @@ if (ezcInputForm::hasPostData()) {
 
                 // ✅ Nueva lógica: desactivar contacto si falla o es rechazado
                 if (
-                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_FAILED ||
-                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_REJECTED
+                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_PENDING
                 ) {
                     try {
                         $contacts = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::getList([

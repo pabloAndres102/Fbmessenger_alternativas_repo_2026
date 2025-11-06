@@ -1,20 +1,20 @@
 <div class="panel">
-    <h1 style="margin-bottom:20px; font-size:22px; color:#333; padding-bottom:8px;">
+    <h1 style="margin-bottom:20px; font-size:22px; padding-bottom:8px;">
         📊 Listado de Campañas SMS
     </h1>
 
     <!-- 🔹 Panel de filtros -->
-<form method="get" style="margin-bottom:20px; padding:15px; background:#f8f9fa; border:1px solid #ddd; border-radius:6px;">
+<form method="get" style="margin-bottom:20px; padding:15px; border:1px solid; border-radius:6px;">
     <div style="display:flex; flex-wrap:wrap; gap:15px; align-items:flex-end;">
 
         <div style="flex:1;">
-            <label style="font-weight:bold; color:#555;">🔍 Nombre</label>
+            <label style="font-weight:bold;">🔍 Nombre</label>
             <input type="text" name="filter_name" value="<?= htmlspecialchars($inputName ?? '') ?>"
                    class="form-control" placeholder="Buscar por nombre" />
         </div>
 
         <div>
-            <label style="font-weight:bold; color:#555;">📌 Estado</label>
+            <label style="font-weight:bold;">📌 Estado</label>
             <select name="filter_status" class="form-control">
                 <option value="">-- Todos --</option>
                 <option value="pending" <?= ($inputStatus === 'pending') ? 'selected' : '' ?>>Pendiente</option>
@@ -24,13 +24,13 @@
         </div>
 
         <div>
-            <label style="font-weight:bold; color:#555;">📅 Desde</label>
+            <label style="font-weight:bold;">📅 Desde</label>
             <input type="date" name="from_date" value="<?= htmlspecialchars($inputFromDate ?? '') ?>"
                    class="form-control" />
         </div>
 
         <div>
-            <label style="font-weight:bold; color:#555;">📅 Hasta</label>
+            <label style="font-weight:bold;">📅 Hasta</label>
             <input type="date" name="to_date" value="<?= htmlspecialchars($inputToDate ?? '') ?>"
                    class="form-control" />
         </div>
@@ -91,8 +91,8 @@
                                 <span class="badge bg-danger"><?= htmlspecialchars($item->status) ?></span>
                             <?php endif; ?>
                         </td>
-                        <td><?= $item->scheduled_at > 0 ? date('Y-m-d H:i', $item->scheduled_at) : '<span style="color:#777;">-</span>' ?></td>
-                        <td><?= $item->sent_at > 0 ? date('Y-m-d H:i', $item->sent_at) : '<span style="color:#777;">-</span>' ?></td>
+                        <td><?= $item->scheduled_at > 0 ? date('Y-m-d H:i', $item->scheduled_at) : '<span style="">-</span>' ?></td>
+                        <td><?= $item->sent_at > 0 ? date('Y-m-d H:i', $item->sent_at) : '<span style="">-</span>' ?></td>
                         <td style="display:flex; gap:6px; align-items:center;">
                             <!-- Botón Eliminar -->
                             <form method="post" action="<?= erLhcoreClassDesign::baseurl('fbmessenger/list_campaign_sms') ?>" style="display:inline;">
@@ -113,7 +113,7 @@
         <?php echo $paginationHtml; ?>
 
     <?php else: ?>
-        <div style="margin-top:20px; padding:15px; background:#f8f9fa; border:1px solid #ddd; border-radius:6px; text-align:center; color:#555;">
+        <div style="margin-top:20px; padding:15px; border:1px solid; border-radius:6px; text-align:center;">
             No hay campañas registradas todavía 📭
         </div>
     <?php endif; ?>

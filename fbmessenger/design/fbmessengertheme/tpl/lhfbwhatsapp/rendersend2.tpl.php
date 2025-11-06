@@ -269,9 +269,15 @@ echo '</script>';
                 </div>
             </div>
         <?php endfor; ?>
+        <?php
+        // Detectar si la plantilla es de tipo AUTHENTICATION
+        $isAuthentication = isset($template['category']) && strtoupper($template['category']) === 'AUTHENTICATION';
+        ?>
+
         <?php foreach ($template['components'] as $component) : ?>
             <?php if ($component['type'] == 'BUTTONS') : ?>
                 <?php foreach ($component['buttons'] as $indexButton => $button) : ?>
+
                     <?php if ($button['type'] == 'MPM') : ?>
                         <div class="col-6">
                             <div class="d-flex align-items-center justify-content-between mb-3">
@@ -280,11 +286,27 @@ echo '</script>';
                             </div>
                             <div id="extraProducts"></div>
                         </div>
+                    <?php endif; ?>
 
-                    <?php endif ?>
+                    <?php
+                    // Mostrar el campo "field_button_" solo si:
+                    // 1️⃣ El botón es tipo URL y tiene {{1}}
+                    // 2️⃣ Y la plantilla es de tipo AUTHENTICATION
+                    ?>
+                    <?php if ($isAuthentication && $button['type'] == 'URL' && strpos($button['url'], '{{1}}') !== false) : ?>
+                        <div class="col-6 mb-3">
+                            <label class="font-weight-bold">Código de verificación ({{1}})</label>
+                            <input type="text"
+                                class="form-control form-control-sm"
+                                name="field_button_<?php echo $indexButton + 1 ?>"
+                                placeholder="Ej: 123456" />
+                        </div>
+                    <?php endif; ?>
+
                 <?php endforeach; ?>
-            <?php endif ?>
-        <?php endforeach ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
         <?php foreach ($template['components'] as $component) : ?>
             <?php if ($component['type'] == 'BUTTONS') : ?>
                 <?php foreach ($component['buttons'] as $indexButton => $button) : ?>

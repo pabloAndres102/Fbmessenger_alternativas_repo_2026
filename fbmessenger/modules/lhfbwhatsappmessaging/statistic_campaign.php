@@ -10,6 +10,8 @@ $data = (array)$fbOptions->data;
 $token = $data['whatsapp_access_token'];
 $whatsapp_business_account_id = $data['whatsapp_business_account_id'];
 
+
+
 function fechaAmigable($fecha)
 {
     $dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
@@ -53,8 +55,10 @@ foreach ($messages as $msg) {
     }
 }
 
+
 // Función para formatear tiempo legible
-function formatoTiempo($segundos) {
+function formatoTiempo($segundos)
+{
     $horas = floor($segundos / 3600);
     $minutos = floor(($segundos % 3600) / 60);
     $seg = $segundos % 60;
@@ -68,11 +72,12 @@ function formatoTiempo($segundos) {
 }
 
 // Traducciones de días y meses
-$dias = ["Sunday"=>"Domingo","Monday"=>"Lunes","Tuesday"=>"Martes","Wednesday"=>"Miércoles","Thursday"=>"Jueves","Friday"=>"Viernes","Saturday"=>"Sábado"];
-$meses = ["January"=>"enero","February"=>"febrero","March"=>"marzo","April"=>"abril","May"=>"mayo","June"=>"junio","July"=>"julio","August"=>"agosto","September"=>"septiembre","October"=>"octubre","November"=>"noviembre","December"=>"diciembre"];
+$dias = ["Sunday" => "Domingo", "Monday" => "Lunes", "Tuesday" => "Martes", "Wednesday" => "Miércoles", "Thursday" => "Jueves", "Friday" => "Viernes", "Saturday" => "Sábado"];
+$meses = ["January" => "enero", "February" => "febrero", "March" => "marzo", "April" => "abril", "May" => "mayo", "June" => "junio", "July" => "julio", "August" => "agosto", "September" => "septiembre", "October" => "octubre", "November" => "noviembre", "December" => "diciembre"];
 
 // Función para formatear fecha en español
-function fechaEspanol($fecha, $dias, $meses) {
+function fechaEspanol($fecha, $dias, $meses)
+{
     $en = date("l, d \d\e F Y", strtotime($fecha));
     $en = strtr($en, $dias);
     $en = strtr($en, $meses);
@@ -111,15 +116,34 @@ if (!empty($tiemposLectura)) {
 
 
 
+$fechaInicio = $item->starts_at;
+$currentTimestamp = $fechaInicio;
 
+// Fecha final: 15 días después
+$nextDayTimestamp = $currentTimestamp + (15 * 24 * 60 * 60);
 
+// Conteo de enviados
+$sentCount2 = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::getCount([
+    'filtergte' => ['created_at' => $currentTimestamp],
+    'filterlt'  => ['created_at' => $nextDayTimestamp],
+    'filter'    => ['status' => \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SENT]
+]);
+$tpl->set('sentCount2', $sentCount2);
+// Conteo de entregados
+$deliveredCount2 = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::getCount([
+    'filtergte' => ['created_at' => $currentTimestamp],
+    'filterlt'  => ['created_at' => $nextDayTimestamp],
+    'filter'    => ['status' => \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_DELIVERED]
+]);
+$tpl->set('deliveredCount2', $deliveredCount2);
+// Conteo de leídos
+$readCount2 = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::getCount([
+    'filtergte' => ['created_at' => $currentTimestamp],
+    'filterlt'  => ['created_at' => $nextDayTimestamp],
+    'filter'    => ['status' => \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_READ]
+]);
+$tpl->set('readCount2', $readCount2);
 
-
-
-
-// print_r('<h1>');
-// print_r($messages);
-// print_r('</h1>');
 
 $generatedConversations = 0;
 
@@ -173,7 +197,7 @@ foreach ($data_x_clicks['data'][0]['data_points'] as $point) {
     $end_point   = $point['end'];
 
     if ($start_point >= $inicio && $start_point < $fin) {
-    
+
         if (isset($point['clicked']) && is_array($point['clicked'])) {
             foreach ($point['clicked'] as $click) {
                 $boton = $click['button_content'];
@@ -191,6 +215,70 @@ foreach ($data_x_clicks['data'][0]['data_points'] as $point) {
 }
 
 $tpl->set('clicksPorBoton', $clicks_por_boton);
+
+$curl = curl_init();
+curl_setopt_array($curl, array(
+    CURLOPT_URL => 'https://graph.facebook.com/v24.0/' . $whatsapp_business_account_id . '/message_templates?fields=name,language,status,category,id&limit=200&access_token=' . $token,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'GET',
+));
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+
+$response = json_decode($response, true);
+
+// 🟩 Buscar la plantilla que coincida con el nombre
+$template_id = null;
+
+if (isset($response['data']) && is_array($response['data'])) {
+    foreach ($response['data'] as $template) {
+        if (isset($template['name']) && $template['name'] === $item->template) {
+            $template_id = $template['id'];
+            break;
+        }
+    }
+}
+    
+$tpl->set('template_id', $template_id);
+
+
+
+
+$campaign = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppCampaign::fetch($item->id);
+
+// Decodificar el JSON con las listas asociadas a la campaña
+$campaign_ids = json_decode($campaign->lists_id, true);
+
+// Inicializar array de listas asociadas
+$listasCampania = [];
+
+if (!empty($campaign_ids) && is_array($campaign_ids)) {
+
+    // Obtener las listas que pertenecen a esta campaña
+    $listas = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContactList::getList([
+        'filterin' => ['id' => $campaign_ids]
+    ]);
+
+    // Crear un array con los datos relevantes
+    foreach ($listas as $lista) {
+        $listasCampania[] = [
+            'id' => $lista->id,
+            'name' => $lista->name
+        ];
+    }
+}
+
+// Enviar al template
+$tpl->set('listasCampania', $listasCampania);
+
+
 
 
 

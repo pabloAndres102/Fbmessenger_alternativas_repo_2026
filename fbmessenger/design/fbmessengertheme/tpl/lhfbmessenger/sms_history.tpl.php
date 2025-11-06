@@ -1,20 +1,38 @@
 <div class="panel">
-    <h1 style="margin-bottom:20px; font-size:22px; color:#333; padding-bottom:8px;">
+    <h1 style="margin-bottom:20px; font-size:22px; padding-bottom:8px;">
         📜 Historial de SMS
     </h1>
 
+    <!-- 🔢 Encabezado con total de mensajes -->
+    <div style="margin-bottom:15px; font-size:15px; padding:10px 12px; border-radius:6px; border:1px solid">
+        <strong>Total de mensajes: </strong> <?= htmlspecialchars($totalItems) ?>
+        <?php if (!empty($_GET['from_date']) || !empty($_GET['to_date'])) : ?>
+            <span>
+                &nbsp;(mostrando resultados  
+                <?php if (!empty($_GET['from_date'])) : ?>
+                    &nbsp;desde <strong><?= htmlspecialchars($_GET['from_date']) ?></strong>
+                <?php endif; ?>
+                <?php if (!empty($_GET['to_date'])) : ?>
+                    &nbsp;hasta <strong><?= htmlspecialchars($_GET['to_date']) ?></strong>
+                <?php endif; ?>)
+            </span>
+        <?php else : ?>
+            <span> (total general)</span>
+        <?php endif; ?>
+    </div>
+
     <!-- 🔍 Panel de filtros -->
-    <form method="get" style="margin-bottom:20px; padding:15px; background:#f8f9fa; border:1px solid #ddd; border-radius:6px;">
+    <form method="get" style="margin-bottom:20px; padding:15px; border:1px solid; border-radius:6px;">
         <div style="display:flex; flex-wrap:wrap; gap:15px; align-items:flex-end;">
 
             <div style="flex:1;">
-                <label style="font-weight:bold; color:#555;">📱 Teléfono</label>
+                <label style="font-weight:bold;">📱 Teléfono</label>
                 <input type="text" name="phone" value="<?= htmlspecialchars($_GET['phone'] ?? '') ?>"
                     class="form-control" placeholder="+57300..." />
             </div>
 
             <div>
-                <label style="font-weight:bold; color:#555;">📌 Estado</label>
+                <label style="font-weight:bold;">📌 Estado</label>
                 <select name="status" class="form-control">
                     <option value="">-- Todos --</option>
                     <option value="sent" <?= (($_GET['status'] ?? '') === 'sent') ? 'selected' : '' ?>>✔ Enviado</option>
@@ -23,13 +41,13 @@
             </div>
 
             <div>
-                <label style="font-weight:bold; color:#555;">📅 Desde</label>
+                <label style="font-weight:bold;">📅 Desde</label>
                 <input type="date" name="from_date" value="<?= htmlspecialchars($_GET['from_date'] ?? '') ?>"
                     class="form-control" />
             </div>
 
             <div>
-                <label style="font-weight:bold; color:#555;">📅 Hasta</label>
+                <label style="font-weight:bold;">📅 Hasta</label>
                 <input type="date" name="to_date" value="<?= htmlspecialchars($_GET['to_date'] ?? '') ?>"
                     class="form-control" />
             </div>
@@ -37,7 +55,8 @@
             <div style="display:flex; gap:8px;">
 
                 <!-- Botón Filtrar -->
-                <button type="submit" class="btn btn-sm btn-outline-primary" style="display:flex; align-items:center; gap:4px; transition: all 0.2s;">
+                <button type="submit" class="btn btn-sm btn-outline-primary"
+                    style="display:flex; align-items:center; gap:4px; transition: all 0.2s;">
                     <span class="material-icons" style="font-size:18px;">search</span> Filtrar
                 </button>
 
@@ -86,10 +105,10 @@
             <?php endforeach; ?>
         </table>
     <?php else : ?>
-        <div style="margin-top:20px; padding:15px; background:#f8f9fa; border:1px solid #ddd; border-radius:6px; text-align:center; color:#555;">
+        <div style="margin-top:20px; padding:15px; border:1px solid; border-radius:6px; text-align:center;">
             No hay mensajes registrados todavía 📭
         </div>
     <?php endif; ?>
-    <?php echo $paginationHtml; ?>
 
+    <?= $paginationHtml; ?>
 </div>

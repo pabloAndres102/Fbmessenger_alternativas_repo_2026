@@ -15,6 +15,13 @@ $ViewList['kanban'] = array(
     'functions' => array( 'use_admin','view_kanban' )
 );
 
+$ViewList['restrictions'] = array(
+    'params' => array(),
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
+
 $ViewList['contact_history'] = array(
     'params' => array(),
     'uparams' => array(),

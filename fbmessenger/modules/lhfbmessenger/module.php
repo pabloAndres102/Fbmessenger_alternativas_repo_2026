@@ -23,6 +23,18 @@ $ViewList['sendsms'] = array(
     'functions' => array('use_admin'),
 );
 
+$ViewList['unsubscribe'] = array(
+    'params' => array(''), 
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
+$ViewList['modal_sms'] = array(
+    'params' => array(''), 
+    'uparams' => array(),
+    'functions' => array('use_admin'),
+);
+
 $ViewList['campaignsms'] = array(
     'params' => array(''), 
     'uparams' => array(),

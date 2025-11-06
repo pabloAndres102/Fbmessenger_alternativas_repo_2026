@@ -1,6 +1,185 @@
 <!-- Incluye la hoja de estilos de Flatpickr -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+<style>
+    body {
+        background-color: #f8fafc;
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: #334155;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #0f172a;
+        margin-bottom: 1rem;
+    }
+
+    h1::before {
+        content: "💬";
+        font-size: 1.6rem;
+    }
+
+    form#whatsapp-form {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem 2rem;
+        margin-top: 1.5rem;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+
+    .form-control,
+    select.form-control-sm {
+        border-radius: 10px !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 10px;
+        font-size: 0.9rem;
+        background-color: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        outline: none;
+    }
+
+    .input-group-text {
+        background-color: #e2e8f0;
+        border-color: #cbd5e1;
+        font-weight: 600;
+    }
+
+    .alert {
+        border-radius: 10px;
+        padding: 1rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .alert-success {
+        background-color: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+    }
+
+    .alert-danger {
+        background-color: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-info {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+    }
+
+    .alert-warning {
+        background-color: #fefce8;
+        color: #854d0e;
+        border: 1px solid #facc15;
+    }
+
+    .fs14 {
+        font-size: 0.88rem;
+        color: #475569;
+    }
+
+    .fs14 li {
+        margin-bottom: 4px;
+    }
+
+    #arguments-template,
+    #arguments-template-form {
+        background: #f9fafb;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1rem;
+    }
+
+    #schedule_ts {
+        background-color: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    small.text-muted {
+        color: #64748b !important;
+    }
+
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+        background-color: #2563eb;
+        border: none;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #1d4ed8;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-warning {
+        background-color: #facc15;
+        border: none;
+        color: #1e293b;
+    }
+
+    .btn-warning:hover {
+        background-color: #eab308;
+        box-shadow: 0 2px 6px rgba(250, 204, 21, 0.3);
+    }
+
+    .material-icons {
+        font-size: 18px;
+        vertical-align: middle;
+    }
+
+    /* Card visual para la info del contacto */
+    .contact-info {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .contact-info h5 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: #0f172a;
+        font-weight: 600;
+    }
+</style>
+
+<!-- Incluye la librería de Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- El resto de tu HTML original va exactamente igual a como lo tienes -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <!-- Incluye la librería de Flatpickr -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <h1><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Send a single message'); ?></h1>

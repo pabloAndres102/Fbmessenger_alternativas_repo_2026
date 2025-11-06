@@ -29,11 +29,25 @@ if ($searchStatus !== '') {
 }
 
 // -----------------------------
-// PAGINACIÓN MANUAL (funcional)
+// FILTROS DE FECHAS (nuevo)
+// -----------------------------
+$fromDate = isset($_GET['from_date']) ? trim($_GET['from_date']) : '';
+if ($fromDate !== '') {
+    $filter['filtergte']['created_at'] = strtotime($fromDate . ' 00:00:00');
+    $tpl->set('from_date', $fromDate);
+}
+
+$toDate = isset($_GET['to_date']) ? trim($_GET['to_date']) : '';
+if ($toDate !== '') {
+    $filter['filterlte']['created_at'] = strtotime($toDate . ' 23:59:59');
+    $tpl->set('to_date', $toDate);
+}
+
+// -----------------------------
+// PAGINACIÓN
 // -----------------------------
 $itemsPerPage = 10;
 
-// página actual desde GET ?page=2
 $page = isset($_GET['page']) && is_numeric($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
 
 // total de ítems con filtros aplicados
@@ -55,11 +69,13 @@ $listFilter['sort']   = 'id DESC';
 $messages = erLhcoreClassModelSms::getList($listFilter);
 
 // -----------------------------
-// CONSTRUIR HTML DE PAGINACIÓN
+// PAGINACIÓN HTML
 // -----------------------------
-$baseUrl = erLhcoreClassDesign::baseurl('fbmessenger/sms_history'); // ajusta si tu ruta es otra
+$baseUrl = erLhcoreClassDesign::baseurl('fbmessenger/sms_history');
+
 // mantener otros parámetros GET (filtros) en los links
 $queryParams = $_GET;
+
 function buildPageUrl($baseUrl, $queryParams, $pageNum) {
     $qp = $queryParams;
     $qp['page'] = $pageNum;

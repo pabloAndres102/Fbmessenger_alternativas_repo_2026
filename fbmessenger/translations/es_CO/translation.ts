@@ -18,6 +18,22 @@
       <source>Information</source>
       <translation>Informacion</translation>
     </message>
+     <message>
+      <source>Share report</source>
+      <translation>Compartir informe</translation>
+    </message>
+    <message>
+      <source>Restrictions</source>
+      <translation>Restricciones</translation>
+    </message>
+    <message>
+      <source>Date send</source>
+      <translation>Fecha de envío</translation>
+    </message>
+    <message>
+      <source>Campaign report</source>
+      <translation>Informe campaña</translation>
+    </message>
   <message>
       <source>Contact lists</source>
       <translation>Listas de contacto</translation>
@@ -2002,6 +2018,10 @@
     <message>
       <source>Save</source>
       <translation>Guardar</translation>
+    </message>
+    <message>
+      <source>Enabled</source>
+      <translation>Estado</translation>
     </message>
     <message>
       <source>Cancel</source>

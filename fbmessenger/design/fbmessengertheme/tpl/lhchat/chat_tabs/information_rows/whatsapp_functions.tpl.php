@@ -1,14 +1,17 @@
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
 <td style="vertical-align: top;">
 
     <div class="panel panel-default">
         <div class="panel-heading">
             <h6>
                 <img class="me-1" title="Facebook WhatsApp"
-                     src="<?php echo erLhcoreClassDesign::design('images/social/whatsapp-ico.png'); ?>"
-                     style="height:18px; vertical-align:middle;">
+                    src="<?php echo erLhcoreClassDesign::design('images/social/whatsapp-ico.png'); ?>"
+                    style="height:18px; vertical-align:middle;">
                 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'WhatsApp Functions'); ?>
             </h6>
         </div>
+
 
         <div class="panel-body">
 
@@ -17,7 +20,7 @@
                 <!-- Botones en línea -->
                 <div class="d-flex gap-2 mb-2">
                     <button class="btn btn-secondary btn-sm flex-fill"
-                            onclick="return lhc.revealModal({
+                        onclick="return lhc.revealModal({
                                 'url': '<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/simple_send'); ?>?phone=<?php echo urlencode($chat->phone); ?>'
                             })">
                         <span class="material-icons">send</span>
@@ -25,7 +28,7 @@
                     </button>
 
                     <button class="btn btn-secondary btn-sm flex-fill"
-                            onclick="return lhc.revealModal({
+                        onclick="return lhc.revealModal({
                                 'title' : 'Import', 
                                 'height':350, 
                                 backdrop:true, 
@@ -41,15 +44,17 @@
                 <!-- Botones en línea -->
                 <div class="d-flex gap-2 mb-2">
                     <button class="btn btn-secondary btn-sm flex-fill"
-                            onclick="return lhc.revealModal({
+                        onclick="return lhc.revealModal({
                                 'url': '<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/simple_send'); ?>?phone=<?php echo urlencode($chat->phone); ?>'
                             })">
                         <span class="material-icons">send</span>
                         <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Send template'); ?>
                     </button>
 
+
+
                     <button class="btn btn-secondary btn-sm flex-fill"
-                            onclick="return lhc.revealModal({
+                        onclick="return lhc.revealModal({
                                 'title' : 'Import', 
                                 'height':350, 
                                 backdrop:true, 
@@ -90,6 +95,27 @@
                 </div>
 
             <?php endif; ?>
+            <div class="panel-heading p-2">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="material-icons" style="font-size:18px;">sms</span>
+                    <h6 class="m-0 fw-bold">
+                        <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'SMS'); ?>
+                    </h6>
+                </div>
+
+                <button class="btn btn-secondary btn-sm d-flex align-items-center gap-1 mt-1 flex-fill"
+                    title="Enviar SMS de prueba"
+                    onclick="return lhc.revealModal({
+        'url': '<?php echo erLhcoreClassDesign::baseurl('fbmessenger/modal_sms'); ?>'
+    })">
+                    <span class="material-icons">sms</span>
+                    <span>Enviar SMS</span>
+                </button>
+
+            </div>
+
+
+
 
         </div>
     </div>
