@@ -20,7 +20,13 @@ $Result['path'] = array(
   )
 );
 
+// Detectar dominio actual dinámicamente
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
+$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 
+// Dominio completo (ejemplo: https://tusitio.com)
+$domain = $scheme . "://" . $host;
 
 $components = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -28,24 +34,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   for ($i = 1; $i <= 10; $i++) {
     $buttonText = isset($_POST["button$i"]) ? $_POST["button$i"] : null;
     if (!empty($buttonText)) {
-        $buttons[] = [
-            "type" => "QUICK_REPLY",
-            "text" => $buttonText
-        ];
-    }
-}
-$urlButtons = [];
-  for ($i = 1; $i <= 2; $i++) {
-    $buttonWebText = isset($_POST["buttonWebText$i"]) ? $_POST["buttonWebText$i"] : null;
-    $buttonWebUrl = isset($_POST["buttonWebUrl$i"]) ? $_POST["buttonWebUrl$i"] : null;
-    if (!empty($buttonWebText) && !empty($buttonWebUrl)) {
-      $urlButtons[] = [
-        "type" => "URL",
-        "text" => $buttonWebText,
-        "url" => $buttonWebUrl
+      $buttons[] = [
+        "type" => "QUICK_REPLY",
+        "text" => $buttonText
       ];
     }
   }
+  $urlButtons = [];
+
+  for ($i = 1; $i <= 2; $i++) {
+    $buttonWebText = $_POST["buttonWebText$i"] ?? null;
+    $buttonWebUrl = $_POST["buttonWebUrl$i"] ?? null;
+    $isUnsubscribe = isset($_POST["buttonWebIsUnsubscribe$i"]) && $_POST["buttonWebIsUnsubscribe$i"] === "1";
+
+    if (!empty($buttonWebText)) {
+      if ($isUnsubscribe) {
+        // URL de desuscripción dinámica
+        $buttonWebUrl = $domain . '/index.php/fbmessenger/unsubscribe?phone={{1}}';
+      }
+
+      $buttonData = [
+        "type" => "URL",
+        "text" => $buttonWebText,
+        "url"  => $buttonWebUrl
+      ];
+
+      // Si la URL tiene variables dinámicas ({{1}}), agrega ejemplo
+      if (preg_match('/\{\{\d+\}\}/', $buttonWebUrl)) {
+        $buttonData["example"] = [$domain . "/index.php/fbmessenger/unsubscribe?phone=573000000000"];
+      }
+
+      $urlButtons[] = $buttonData;
+    }
+  }
+
   if (!empty($urlButtons)) {
     $buttons = array_merge($buttons, $urlButtons);
   }
@@ -53,11 +75,11 @@ $urlButtons = [];
   $buttonCallbackPhone = $_POST['buttoCallbackCountry'] . $_POST['buttonCallbackPhone'];
   $buttonCallbackText = $_POST['buttonCallbackText'];
   if (!empty($buttonCallbackPhone)) {
-      $buttons[] = [
-          "type" => "PHONE_NUMBER",
-          "text" => $buttonCallbackText,
-          "phone_number" => $buttonCallbackPhone
-      ];
+    $buttons[] = [
+      "type" => "PHONE_NUMBER",
+      "text" => $buttonCallbackText,
+      "phone_number" => $buttonCallbackPhone
+    ];
   }
 
 
@@ -69,7 +91,7 @@ $urlButtons = [];
   $language = $_POST['language'];
   $text = $_POST['text'];
   $headertype = isset($_POST['header']) ? $_POST['header'] : "";
- 
+
   $footer = $_POST['footer'];
   $button1 = $_POST['button1'];
   $button2 = $_POST['button2'];
@@ -90,11 +112,11 @@ $urlButtons = [];
 
   $buttonCatalog = $_POST['buttonCatalog'];
   $buttonMPM = $_POST['buttonMPM'];
-  
-  if(isset($_POST['buttonMPM'])){
+
+  if (isset($_POST['buttonMPM'])) {
     $headertype = 'TEXT';
   }
-  
+
 
   $offert = $_POST['offert'];
   $buttonOffertURL = $_POST['buttonOffertURL'];
@@ -126,7 +148,7 @@ $urlButtons = [];
   $nombre_archivo = str_replace(' ', '', $nombre_archivo);
 
   curl_setopt_array($ch, array(
-    CURLOPT_URL => 'https://graph.facebook.com/v17.0/' . $app_id . '/uploads?file_length=' . $tamaño_archivo . '&file_type=' . $tipo_archivo . '&file_name=' . $nombre_archivo . '', # Revisar en caso de que requiera la extension el nombre
+    CURLOPT_URL => 'https://graph.facebook.com/v21.0/' . $app_id . '/uploads?file_length=' . $tamaño_archivo . '&file_type=' . $tipo_archivo . '&file_name=' . $nombre_archivo . '', # Revisar en caso de que requiera la extension el nombre
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -200,10 +222,10 @@ $urlButtons = [];
   // };
   if (!empty($buttons)) {
     $components[] = [
-        "type" => "BUTTONS",
-        "buttons" => $buttons
+      "type" => "BUTTONS",
+      "buttons" => $buttons
     ];
-}
+  }
 
 
   if (!empty($buttonCatalog)) {
@@ -226,7 +248,7 @@ $urlButtons = [];
 
     $button[] =  [
       "type" => "copy_code",
-      "example"=> "CARIBE25"
+      "example" => "CARIBE25"
     ];
 
     $button[] = [
@@ -432,7 +454,7 @@ $urlButtons = [];
     $template->updated_at  = time();
     $template->user_id     = erLhcoreClassUser::instance()->getUserID();
     $template->saveThis();   // 👈 importante: SIN parámetros
-}
+  }
 
   header('Location: ' . erLhcoreClassDesign::baseurl('fbwhatsapp/templates'));
 }

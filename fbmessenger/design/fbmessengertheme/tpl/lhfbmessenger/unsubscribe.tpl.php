@@ -13,6 +13,4 @@
             <strong>Motivo:</strong> <?= htmlspecialchars($response['error']) ?>
         </div>
     <?php endif; ?>
-
-    <a href="https://tusitio.com" class="btn btn-outline-primary mt-3">Volver al inicio</a>
 </div>

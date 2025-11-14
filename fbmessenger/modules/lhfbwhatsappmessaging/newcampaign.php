@@ -96,7 +96,7 @@ if (ezcInputForm::hasPostData()) {
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://graph.facebook.com/v20.0/' . $phone_numbers[0]. '/media',
+                CURLOPT_URL => 'https://graph.facebook.com/v20.0/' . $phone_numbers[0] . '/media',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -156,7 +156,7 @@ if (ezcInputForm::hasPostData()) {
             $curl = curl_init();
             $phone_numbers = explode(',', $data['whatsapp_business_account_phone_number']);
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://graph.facebook.com/v20.0/' . $phone_numbers[0] .'/media',
+                CURLOPT_URL => 'https://graph.facebook.com/v20.0/' . $phone_numbers[0] . '/media',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -184,7 +184,31 @@ if (ezcInputForm::hasPostData()) {
         $item->image_ids = $archivos;
     }
 
+    $buttons = [];
 
+    foreach ($_POST as $key => $value) {
+        if (strpos($key, 'field_button_') === 0 && !empty($value)) {
+
+            $index = str_replace('field_button_', '', $key);
+
+            $button = [
+                'type' => 'reply',
+                'title' => $value
+            ];
+
+            $payloadKey = 'field_button_payload_' . $index;
+
+            if (isset($_POST[$payloadKey]) && !empty($_POST[$payloadKey])) {
+                $button['payload'] = $_POST[$payloadKey];
+            }
+
+            $buttons[] = $button;
+        }
+    }
+
+    if (!empty($buttons)) {
+        $item->buttons = $buttons;
+    }
 
 
 

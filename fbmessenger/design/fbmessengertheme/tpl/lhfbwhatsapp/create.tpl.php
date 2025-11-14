@@ -749,41 +749,73 @@
     </script>
 
     <script>
-        let urlButtonCount = 0;
+let urlButtonCount = 0;
 
-        document.getElementById('addUrlButton').addEventListener('click', function() {
-            if (urlButtonCount < 2) {
-                urlButtonCount++;
-                const container = document.getElementById('urlButtonsContainer');
-                const buttonTextId = `buttonWebText${urlButtonCount}`;
-                const buttonUrlId = `buttonWebUrl${urlButtonCount}`;
-                const buttonDivId = `urlButtonDiv${urlButtonCount}`;
+document.getElementById('addUrlButton').addEventListener('click', function() {
+    if (urlButtonCount < 2) {
+        urlButtonCount++;
+        const container = document.getElementById('urlButtonsContainer');
+        const buttonTextId = `buttonWebText${urlButtonCount}`;
+        const buttonUrlId = `buttonWebUrl${urlButtonCount}`;
+        const unsubCheckboxId = `buttonWebIsUnsubscribe${urlButtonCount}`;
+        const buttonDivId = `urlButtonDiv${urlButtonCount}`;
 
-                const div = document.createElement('div');
-                div.id = buttonDivId;
-                div.innerHTML = `
-        <h5><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Go to website'); ?></strong></h5>
-        <label for="${buttonTextId}"><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Text'); ?></strong></label>
-        <input class="form-control" type="text" id="${buttonTextId}" name="${buttonTextId}" maxlength="25">
-        <label for="${buttonUrlId}"><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'URL site'); ?></strong></strong></label>
-        <input class="form-control" type="url" id="${buttonUrlId}" name="${buttonUrlId}" maxlength="2000" placeholder="https://www.google.com/">
-        <button type="button" onclick="removeUrlButton('${buttonDivId}')" class="btn btn-danger">Eliminar</button>
-        <hr>
-      `;
-                container.appendChild(div);
+        const div = document.createElement('div');
+        div.id = buttonDivId;
+        div.innerHTML = `
+            <h5><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Go to website'); ?></strong></h5>
+
+            <label for="${buttonTextId}">
+                <strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Text'); ?></strong>
+            </label>
+            <input class="form-control" type="text" id="${buttonTextId}" name="${buttonTextId}" maxlength="25">
+
+            <div class="url-inputs">
+                <label for="${buttonUrlId}">
+                    <strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'URL site'); ?></strong>
+                </label>
+                <input class="form-control" type="url" id="${buttonUrlId}" name="${buttonUrlId}" maxlength="2000" placeholder="https://www.google.com/">
+            </div>
+
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="${unsubCheckboxId}" name="${unsubCheckboxId}" value="1">
+                <label class="form-check-label" for="${unsubCheckboxId}">
+                    Este botón es de cancelar suscripción
+                </label>
+            </div>
+
+            <button type="button" onclick="removeUrlButton('${buttonDivId}')" class="btn btn-danger mt-2">Eliminar</button>
+            <hr>
+        `;
+
+        container.appendChild(div);
+
+        // Escucha cambios en el checkbox de desuscripción
+        const unsubCheckbox = div.querySelector(`#${unsubCheckboxId}`);
+        const urlInputs = div.querySelector('.url-inputs');
+
+        unsubCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                urlInputs.style.display = 'none';
+                div.querySelector(`#${buttonUrlId}`).value = ''; // limpiar URL
             } else {
-                alert("Se pueden agregar un máximo de 2 botones de URL.");
+                urlInputs.style.display = 'block';
             }
         });
+    } else {
+        alert("Se pueden agregar un máximo de 2 botones de URL.");
+    }
+});
 
-        function removeUrlButton(buttonDivId) {
-            const buttonDiv = document.getElementById(buttonDivId);
-            if (buttonDiv) {
-                buttonDiv.remove();
-                urlButtonCount--;
-            }
-        }
-    </script>
+function removeUrlButton(buttonDivId) {
+    const buttonDiv = document.getElementById(buttonDivId);
+    if (buttonDiv) {
+        buttonDiv.remove();
+        urlButtonCount--;
+    }
+}
+</script>
+
     <script>
         let buttonCount = 0;
         const maxButtons = 10;

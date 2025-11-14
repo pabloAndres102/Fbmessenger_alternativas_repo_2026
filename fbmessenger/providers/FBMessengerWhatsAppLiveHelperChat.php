@@ -224,10 +224,21 @@ namespace LiveHelperChatExtension\fbmessenger\providers {
                                 $paramValue = $item->message_variables_array[$key];
                             }
 
-                            // Si la plantilla contiene un {{1}} en el botón
-                            $templateHasPlaceholder = isset($button['url']) && strpos($button['url'], '{{1}}') !== false;
+                            // Detectar si la plantilla tiene placeholder {{1}}, {{2}}, etc.
+                            $templateHasPlaceholder = isset($button['url']) && preg_match('/\{\{\d+\}\}/', $button['url']);
 
-                            // Si hay parámetro o placeholder, se envía el componente
+                            // Si la plantilla tiene placeholder y no hay valor explícito, usamos el teléfono del destinatario
+                            if ($templateHasPlaceholder && empty($paramValue)) {
+                                $paramValue = (string)$item->phone;
+                            }
+
+                            // Caso especial: botón "cancelar_suscripcion" → genera URL completa con phone
+                            $isCancelSubscription = isset($button['text']) && stripos($button['text'], 'cancelar_suscripcion') !== false;
+                            if ($isCancelSubscription) {
+                                $paramValue = $host . '/unsubscribe?phone=' . urlencode($item->phone);
+                            }
+
+                            // Si hay parámetro o placeholder, agregamos el componente del botón
                             if ($templateHasPlaceholder || $paramValue !== null) {
                                 $bodyArguments[] = [
                                     "type" => "button",
@@ -241,8 +252,9 @@ namespace LiveHelperChatExtension\fbmessenger\providers {
                                     ]
                                 ];
                             }
-                            // ⚠️ Si no hay placeholder ni variable, no agregamos el botón
                         }
+
+
 
 
 

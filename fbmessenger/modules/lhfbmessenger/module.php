@@ -24,9 +24,10 @@ $ViewList['sendsms'] = array(
 );
 
 $ViewList['unsubscribe'] = array(
-    'params' => array(''), 
-    'uparams' => array(),
-    'functions' => array('use_admin'),
+    'params' => array(),
+    'uparams' => array('phone'),
+    'functions' => array(),
+    'access' => 'public'
 );
 
 $ViewList['modal_sms'] = array(
