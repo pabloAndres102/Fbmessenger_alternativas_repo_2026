@@ -2,11 +2,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <style>
-    body {
-        background-color: #f8fafc;
-        font-family: "Inter", "Segoe UI", sans-serif;
-        color: #334155;
-    }
+
 
     h1 {
         font-size: 1.4rem;
@@ -14,7 +10,6 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #0f172a;
         margin-bottom: 1rem;
     }
 
@@ -24,7 +19,6 @@
     }
 
     form#whatsapp-form {
-        background: #ffffff;
         border-radius: 12px;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         padding: 1.5rem 2rem;
@@ -33,7 +27,6 @@
 
     .form-group label {
         font-weight: 600;
-        color: #0f172a;
         margin-bottom: 6px;
     }
 
@@ -43,7 +36,6 @@
         border: 1px solid #cbd5e1 !important;
         padding: 10px;
         font-size: 0.9rem;
-        background-color: #fff;
         transition: all 0.2s ease;
     }
 
@@ -54,8 +46,6 @@
     }
 
     .input-group-text {
-        background-color: #e2e8f0;
-        border-color: #cbd5e1;
         font-weight: 600;
     }
 
@@ -67,25 +57,21 @@
     }
 
     .alert-success {
-        background-color: #ecfdf5;
         color: #047857;
         border: 1px solid #a7f3d0;
     }
 
     .alert-danger {
-        background-color: #fef2f2;
         color: #b91c1c;
         border: 1px solid #fecaca;
     }
 
     .alert-info {
-        background-color: #eff6ff;
         color: #1d4ed8;
         border: 1px solid #bfdbfe;
     }
 
     .alert-warning {
-        background-color: #fefce8;
         color: #854d0e;
         border: 1px solid #facc15;
     }
@@ -101,15 +87,11 @@
 
     #arguments-template,
     #arguments-template-form {
-        background: #f9fafb;
-        border: 1px solid #e2e8f0;
         border-radius: 10px;
         padding: 1rem;
     }
 
     #schedule_ts {
-        background-color: #f8fafc;
-        border: 1px dashed #cbd5e1;
         border-radius: 10px;
         padding: 1rem;
         margin-top: 1rem;
@@ -158,8 +140,6 @@
 
     /* Card visual para la info del contacto */
     .contact-info {
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
         border-radius: 10px;
         padding: 1rem;
         margin-bottom: 1.2rem;

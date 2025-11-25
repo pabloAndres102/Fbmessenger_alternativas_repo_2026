@@ -1,10 +1,5 @@
 <style>
     /* === Estilos visuales consistentes con el formulario de Enviar SMS === */
-    body {
-        background-color: #f8fafc;
-        font-family: "Inter", "Segoe UI", sans-serif;
-        color: #1e293b;
-    }
 
     h2.fs-4 {
         color: #0f172a;
@@ -18,19 +13,13 @@
     }
 
     .table thead {
-        background-color: #f1f5f9;
         color: #0f172a;
         font-weight: 600;
     }
 
-    .table-hover tbody tr:hover {
-        background-color: #f8fafc;
-    }
 
     .card {
-        border: 1px solid #e2e8f0;
         border-radius: 12px;
-        background-color: #ffffff;
     }
 
     .badge {
@@ -48,7 +37,6 @@
 
     .btn-outline-primary:hover {
         background-color: #3b82f6;
-        color: #fff;
         box-shadow: 0 2px 6px rgba(59,130,246,0.3);
     }
 

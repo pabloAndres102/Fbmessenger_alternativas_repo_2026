@@ -10,9 +10,6 @@
         color: white;
     }
 
-    .table-custom tbody tr:hover {
-        background-color: #f1f1f1;
-    }
 
     .btn-edit {
         background-color: #007bff;
@@ -28,10 +25,9 @@
     }
 
     .custom-card {
-        border: 1px solid #ddd;
+        border: 1px solid;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
     }
 
     .profile-placeholder {
@@ -39,7 +35,6 @@
         /* Ajusta el tamaño según sea necesario */
         height: 100px;
         /* Ajusta el tamaño según sea necesario */
-        background-color: #ddd;
         /* Color de fondo para la imagen */
         color: #666;
         /* Color del texto */
