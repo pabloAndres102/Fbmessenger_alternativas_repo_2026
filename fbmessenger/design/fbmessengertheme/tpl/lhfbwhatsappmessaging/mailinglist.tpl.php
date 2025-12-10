@@ -2,7 +2,6 @@
     /* === Estilos visuales consistentes con el formulario de Enviar SMS === */
 
     h2.fs-4 {
-        color: #0f172a;
         font-weight: 600;
     }
 
@@ -13,7 +12,6 @@
     }
 
     .table thead {
-        color: #0f172a;
         font-weight: 600;
     }
 
@@ -28,8 +26,6 @@
     }
 
     .btn-outline-primary {
-        border: 1px solid #3b82f6;
-        color: #1d4ed8;
         border-radius: 8px;
         font-weight: 500;
         transition: all 0.2s ease;
@@ -61,9 +57,9 @@
 <?php include(erLhcoreClassDesign::designtpl('lhfbwhatsappmessaging/parts/search_panel_mailinglist.tpl.php')); ?>
 
 <?php if (isset($items)) : ?>
-<div class="card p-4 shadow-sm" style="border-radius: 12px; background-color: #ffffff;">
+<div class="card p-4 shadow-sm" style="border-radius: 12px; ">
     <table class="table table-hover align-middle" width="100%" ng-non-bindable>
-        <thead class="table-light">
+        <thead class="table">
         <tr>
             <th>📛 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger','Name');?></th>
             <th>👥 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger','Members');?></th>

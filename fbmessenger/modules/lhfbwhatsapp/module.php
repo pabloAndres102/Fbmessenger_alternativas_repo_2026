@@ -39,19 +39,19 @@ $ViewList['analytics'] = array(
 $ViewList['validate_number'] = array(
     'params' => array(),
     'uparams' => array(),
-    'functions' => array('use_admin'),
+    'functions' => array('use_admin',"validate_numbers"),
 );
 
 $ViewList['validate_email'] = array(
     'params' => array(),
     'uparams' => array(),
-    'functions' => array('use_admin'),
+    'functions' => array('use_admin',"validate_emails"),
 );
 
 $ViewList['validator'] = array(
     'params' => array(),
     'uparams' => array(),
-    'functions' => array('use_admin'),
+    'functions' => array(),
 );
 
 $ViewList['metric_templates'] = array(
@@ -241,3 +241,5 @@ $FunctionList['all_send_messages'] = array('explain' => 'Operator can see all se
 $FunctionList['delete_messages'] = array('explain' => 'Allow operator to delete sent messages, only his own');
 $FunctionList['delete_all_messages'] = array('explain' => 'Allow operator to delete all sent messages, not only his own');
 $FunctionList['delete_templates'] = array('explain' => 'Allow operator to delete templates');
+$FunctionList['validate_numbers'] = array('explain' => 'Permite validar números de WhatsApp');
+$FunctionList['validate_emails'] = array('explain' => 'Permite validar emails');

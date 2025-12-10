@@ -162,7 +162,7 @@ if (ezcInputForm::hasPostData()) {
     }
 
     if ($form->hasValidData('schedule_message') && $form->schedule_message == true) {
-        $item->status = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SCHEDULED;
+        $item-> = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SCHEDULED;
     }
 
     if ($form->hasValidData('scheduled_at')) {
@@ -446,7 +446,7 @@ if (ezcInputForm::hasPostData()) {
 
                 // ✅ Nueva lógica: desactivar contacto si falla o es rechazado
                 if (
-                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_PENDING
+                    $item->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_REJECTED
                 ) {
                     try {
                         $contacts = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppContact::getList([

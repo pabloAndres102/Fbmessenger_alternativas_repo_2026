@@ -254,13 +254,6 @@ namespace LiveHelperChatExtension\fbmessenger\providers {
                             }
                         }
 
-
-
-
-
-
-
-
                         if ($button['type'] == 'CATALOG') {
                             $bodyArguments[] = [
                                 "type" => "button",

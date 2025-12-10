@@ -15,6 +15,34 @@
   <context>
   <name>module/fbmessenger</name>
   <message>
+      <source>Whatsapp statistics</source>
+      <translation>Estadísticas de WhatsApp</translation>
+    </message>
+    <message>
+      <source>This contact is deactivated</source>
+      <translation>Este contacto esta desactivado</translation>
+    </message>
+    <message>
+      <source>Associated Lists</source>
+      <translation>Listas asociadas</translation>
+    </message>
+    <message>
+      <source>Validators</source>
+      <translation>Validadores</translation>
+    </message>
+     <message>
+      <source>Validate number</source>
+      <translation>Validador de numero</translation>
+    </message>
+    <message>
+      <source>Email Validator</source>
+      <translation>Validador de email</translation>
+    </message>
+    <message>
+      <source>Validate email</source>
+      <translation>Validar email</translation>
+    </message>
+  <message>
       <source>Information</source>
       <translation>Informacion</translation>
     </message>
@@ -2018,6 +2046,10 @@
     <message>
       <source>Save</source>
       <translation>Guardar</translation>
+    </message>
+    <message>
+      <source>Status</source>
+      <translation>Estado</translation>
     </message>
     <message>
       <source>Enabled</source>

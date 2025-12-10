@@ -1,1482 +1,896 @@
-<style>
-    .chart-section {
-        margin-bottom: 40px;
-        padding: 20px;
-        background: #fff;
-        border-radius: 12px;
-        /* sombra más notoria */
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+<!--
+  UNIFICACIÓN FINAL: Vista rediseñada para LiveHelperChat (Whatsapp statistics)
+-->
 
-    .chart-section:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
-    }
-
-    .chart-title {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-        text-align: center;
-        font-weight: 600;
-        color: #333;
-    }
-
-    .chart-warning {
-        color: red;
-        font-style: italic;
-        text-align: center;
-    }
-
-    .recuadro {
-        position: relative;
-        background-color: #ffffff;
-        border: 1px solid #e3e6f0;
-        border-radius: 10px;
-        padding: 20px 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        text-align: left;
-        width: 100%;
-    }
-
-    .recuadro:hover {
-        background-color: #f1f3f5;
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-        border-color: #d1d5db;
-        cursor: pointer;
-    }
-
-    /* Icono en esquina superior derecha */
-    .recuadro .icon-top-right {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 28px;
-        /* Más grande */
-        transition: transform 0.3s;
-    }
-
-    /* Hover suave para iconos */
-    .recuadro:hover .icon-top-right {
-        transform: scale(1.2);
-    }
-
-    /* Iconos con colores según tipo */
-    .icon-send {
-        color: #0d6efd;
-    }
-
-    .icon-slow {
-        color: #dc3545;
-    }
-
-    .icon-fast {
-        color: #ffc107;
-    }
-
-    /* Azul para enviados */
-    .icon-trending {
-        color: #20c997;
-    }
-
-    .icon-template {
-        color: #0d6efd;
-    }
-
-    /* Verde para tasas/estadísticas positivas */
-    .icon-inbox {
-        color: #ffc107;
-    }
-
-    /* Amarillo para bandeja/entradas */
-    .icon-error {
-        color: #dc3545;
-    }
-
-    /* Rojo para fallidos */
-    .icon-check {
-        color: #198754;
-    }
-
-    select.form-control {
-        padding: 8px 12px;
-        border: 1px solid #ced4da;
-        border-radius: 6px;
-        font-size: 14px;
-        outline: none;
-        width: auto;
-        display: inline-block;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    select.form-control:focus {
-        border-color: #80bdff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-
-    .chart-title {
-        font-size: 26px;
-        color: #2c3e50;
-        margin-bottom: 15px;
-        text-align: center;
-        font-weight: 600;
-    }
-
-    /* Estilos para los inputs de fecha */
-    input[type="datetime-local"] {
-        padding: 8px 12px;
-        border: 1px solid #ced4da;
-        border-radius: 6px;
-        font-size: 14px;
-        outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input[type="datetime-local"]:focus {
-        border-color: #80bdff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-
-    /* Estilos para los botones */
-    button.btn {
-        padding: 10px 18px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        background-color: #007bff;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 500;
-        transition: background-color 0.3s, transform 0.2s;
-    }
-
-    button.btn:hover {
-        background-color: #0056b3;
-        transform: translateY(-2px);
-    }
-
-    /* Iconos dentro de botones */
-    span.material-icons {
-        vertical-align: middle;
-        margin-right: 6px;
-        font-size: 18px;
-    }
-
-    /* Estilos para los recuadros */
-    .recuadro,
-    .recuadro-button {
-        background-color: #ffffff;
-        border: 1px solid #e3e6f0;
-        border-radius: 10px;
-        padding: 20px 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        text-align: left;
-        width: 100%;
-    }
-
-    .recuadro:hover,
-    .recuadro-button:hover {
-        background-color: #f1f3f5;
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-        border-color: #d1d5db;
-        cursor: pointer;
-    }
-
-    .recuadro p,
-    .recuadro h1,
-    .recuadro-button p,
-    .recuadro-button h1 {
-        margin: 0;
-    }
-
-    /* Estilo de los números dentro de recuadro */
-    .recuadro h1,
-    .recuadro-button h1 {
-        font-size: 34px;
-        color: #1d4ed8;
-        font-weight: 600;
-    }
-
-    /* Botones dentro de recuadro (sin fondo predeterminado) */
-    .recuadro-button {
-        background: none;
-        border: none;
-        padding: 0;
-    }
-</style>
+<!-- Dependencias -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-<?php
-$businessAccount = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppAccount::getList();
-?>
-<div class="container">
-    <h1><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Statistics'); ?></h1>
-    <br>
-    <form method="POST" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/index') ?>" id="dateForm">
-        <input type="datetime-local" name="start" id="startDate" value="<?php echo (isset($startTimestamp) ? date('Y-m-d\TH:i', $startTimestamp) : date('Y-m-d\TH:i')); ?>">&nbsp;&nbsp;
-        <input type="datetime-local" name="end" id="endDate" value="<?php echo (isset($endTimestamp) ? date('Y-m-d\TH:i', $endTimestamp) : date('Y-m-d\TH:i')); ?>">&nbsp;&nbsp;
 
-        <input type="tel" name="phone" id="phoneNumber" placeholder="Numero telefonico" pattern="[0-9]{10,15}" title="Please enter a valid phone number (10-15 digits)." style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; font-size: 14px; outline: none;">&nbsp;&nbsp;
-
-        <select name="businessAccount" class="form-control form-control-sm">
-            <option value=""><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Cuenta comercial'); ?></option>
-            <?php foreach ($businessAccount as $account): ?>
-                <option value="<?php echo $account->id; ?>">
-                    <?php echo htmlspecialchars($account->name); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>&nbsp;&nbsp;
-
-        <button class="btn btn-primary" type="submit">
-            <span class="material-icons">search</span><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('system/buttons', 'Search'); ?>
-        </button>
-    </form>
-
-
-
-    <br>
-    <div class="row">
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
-                <input type="hidden" name="status_statistic" value="1,2,3,6,7">
-                <input type="hidden" name="start" class="startDate">
-                <input type="hidden" name="end" class="endDate">
-                <button type="submit" class="recuadro-button">
-                    <div class="recuadro">
-                        <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Sent conversations'); ?></strong></p>
-                        <?php if (isset($totalSent)) : ?>
-                            <h1><?php echo $totalSent; ?></h1>
-                            <span class="material-icons">visibility</span>
-                            <span class="material-icons icon-top-right icon-send">send</span>
-                        <?php endif; ?>
-                    </div>
-                </button>
-            </form>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
-                <input type="hidden" name="status_statistic" value="3">
-                <input type="hidden" name="start" class="startDate">
-                <input type="hidden" name="end" class="endDate">
-                <button type="submit" class="recuadro-button">
-                    <div class="recuadro">
-                        <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Tasa de envio en %'); ?></strong></p>
-                        <?php if (isset($tasaEnvio)) : ?>
-                            <h1><?php echo $tasaEnvio . '%'; ?></h1>
-                            <span class="material-icons">visibility</span>
-                            <span class="material-icons icon-top-right icon-trending">trending_up</span>
-                        <?php endif; ?>
-                    </div>
-                </button>
-            </form>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 3 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Tasa de respuesta en %'); ?></strong></p>
-                <?php if (isset($engagement)) : ?>
-                    <h1><?php print_r($engagement . '%'); ?></h1>
-                <?php endif; ?>
-                <span class="material-icons icon-top-right icon-response">question_answer</span>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 2 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Incoming conversations'); ?></strong></p>
-                <?php if (isset($msg_services)) : ?>
-                    <h1><?php echo $msg_services; ?></h1><small>(api)</small>
-
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
-                <input type="hidden" name="conversation">
-                <input type="hidden" name="start" class="startDate">
-                <input type="hidden" name="end" class="endDate">
-                <button type="submit" class="recuadro-button">
-                    <div class="recuadro">
-                        <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Generated conversations'); ?></strong></p>
-                        <?php if (isset($chatid)) : ?>
-                            <h1><?php echo $chatid; ?></h1>
-                            <span class="material-icons">visibility</span>
-                        <?php endif; ?>
-                        <span class="material-icons icon-top-right icon-generated">chat_bubble</span>
-                    </div>
-                </button>
-            </form>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 4 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Promedio de lectura'); ?></strong></p>
-                <?php if (isset($averageTime)) : ?>
-                    <h1><?php echo $averageTime; ?></h1>
-                <?php endif; ?>
-                <span class="material-icons icon-top-right icon-average">bar_chart</span>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 4 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Lectura más rápida'); ?></strong></p>
-                <?php if (isset($fastestTime)) : ?>
-                    <h1><?php echo $fastestTime; ?></h1>
-                <?php else : ?>
-                    <h1>Sin datos</h1>
-                <?php endif; ?>
-                <span class="material-icons icon-top-right icon-fast">flash_on</span>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 4 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Lectura más lenta'); ?></strong></p>
-                <?php if (isset($slowestTime)) : ?>
-                    <h1><?php echo $slowestTime; ?></h1>
-                <?php else : ?>
-                    <h1>Sin datos</h1>
-                <?php endif; ?>
-                <span class="material-icons icon-top-right icon-slow">schedule</span>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
-                <input type="hidden" name="status_statistic" value="2">
-                <input type="hidden" name="start" class="startDate">
-                <input type="hidden" name="end" class="endDate">
-                <button type="submit" class="recuadro-button">
-                    <div class="recuadro">
-                        <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Estado entregado'); ?></strong></p>
-                        <?php if (isset($deliveredCount)) : ?>
-                            <h1><?php echo $deliveredCount; ?></h1>
-                            <span class="material-icons">visibility</span>
-                            <span class="material-icons icon-top-right icon-check">check_circle</span>
-                        <?php endif; ?>
-                    </div>
-                </button>
-            </form>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
-                <input type="hidden" name="status_statistic" value="6">
-                <input type="hidden" name="start" class="startDate">
-                <input type="hidden" name="end" class="endDate">
-                <button type="submit" class="recuadro-button">
-                    <div class="recuadro">
-                        <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Estado fallido'); ?></strong></p>
-                        <?php if (isset($failedCount)) : ?>
-                            <h1><?php echo $failedCount; ?></h1>
-                            <span class="material-icons">visibility</span>
-                            <span class="material-icons icon-top-right icon-error">error</span>
-                        <?php endif; ?>
-                    </div>
-                </button>
-            </form>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>">
-                <input type="hidden" name="status_statistic" value="7">
-                <input type="hidden" name="start" class="startDate">
-                <input type="hidden" name="end" class="endDate">
-                <button type="submit" class="recuadro-button">
-                    <div class="recuadro">
-                        <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Estado rechazado'); ?></strong></p>
-                        <?php if (isset($rejectedCount)) : ?>
-                            <h1><?php echo $rejectedCount; ?></h1>
-                            <span class="material-icons">visibility</span>
-                            <span class="material-icons icon-top-right icon-error">cancel</span>
-                        <?php endif; ?>
-                    </div>
-                </button>
-            </form>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 4 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Plantilla más enviada'); ?></strong></p>
-                <?php if (isset($mostRepeatedTemplate)) : ?>
-                    <h1 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $mostRepeatedTemplate; ?></h1>
-                    <p>(<?php echo $maxFrequency; ?>)</p>
-                <?php else : ?>
-                    <h1>Sin datos</h1>
-                <?php endif; ?>
-                <span class="material-icons icon-top-right icon-template">content_copy</span>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 4 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Día que se envió más plantillas'); ?></strong></p>
-                <?php if (isset($dayWithMostMessages)) : ?>
-                    <h1><?php echo $dayWithMostMessages; ?></h1>
-                    <p>(<?php echo $maxMessages; ?>)</p>
-                <?php else : ?>
-                    <h1>Sin datos</h1>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 4 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'día mayor tasa de interaccion'); ?></strong></p>
-                <?php if (isset($dayWithMaxEngagement)) : ?>
-                    <h1><?php echo $dayWithMaxEngagement; ?></h1>
-                <?php else : ?>
-                    <h1>Sin datos</h1>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div class="recuadro"> <!-- Recuadro 4 -->
-                <p><strong><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'día menor tasa de interaccion'); ?></strong></p>
-                <?php if (isset($dayWithMinEngagement)) : ?>
-                    <h1><?php echo $dayWithMinEngagement; ?></h1>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="container-graphics" style="max-width:1200px; margin:auto; padding:20px;">
-
-        <!-- Plantillas enviadas -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#1976d2;">send</span>
-                Plantillas enviadas
-            </h3>
-            <p class="chart-warning">
-                <span class="material-icons">warning</span> Importante: Esta información puede variar según la privacidad definida por el usuario.
-            </p>
-            <canvas id="myChart" height="120"></canvas>
-        </section>
-
-        <!-- chats sin respuesta -->
-
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#e53935;">chat_off</span>
-                Chats sin respuesta
-            </h3>
-            <p class="chart-warning">
-                <span class="material-icons">warning</span> Importante: Los chats sin respuesta corresponden al rango de fechas seleccionado.
-            </p>
-            <canvas id="unansweredChart" height="120"></canvas>
-        </section>
-
-        <!-- cantidad promedio y picos de chat por hora -->
-
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#1976d2;">schedule</span>
-                Promedio y pico de chats por hora
-            </h3>
-            <p class="chart-warning">
-                <span class="material-icons">info</span> El promedio se calcula en base al rango de fechas seleccionado.
-            </p>
-            <canvas id="chatsHoraChart" height="120"></canvas>
-        </section>
-
-
-
-        <!-- Número de mensajes -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#f57c00;">forum</span>
-                Número de mensajes por hora
-            </h3>
-            <canvas id="workLoadChart" height="150"></canvas>
-        </section>
-
-        <!-- Chats por hora -->
-
-        <!-- Estado de las Plantillas -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#7b1fa2;">pie_chart</span>
-                Estado de las Plantillas
-            </h3>
-            <center><canvas id="pieChart" width="400" height="400"></canvas></center>
-        </section>
-
-        <!-- Tiempo de espera -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#e53935;">hourglass_bottom</span>
-                ⏳ Promedio de tiempo de espera por asesor
-            </h3>
-            <canvas id="graficoEspera" style="width:100%; height:400px;"></canvas>
-        </section>
-
-        <!-- Envíos por agente -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#6d4c41;">groups</span>
-                Envíos por agente
-            </h3>
-            <center><canvas id="pieChartAgents" width="400" height="400"></canvas></center>
-        </section>
-
-        <!-- Plantillas leídas -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#2e7d32;">drafts</span>
-                Plantillas leídas
-            </h3>
-            <p class="chart-warning">
-                <span class="material-icons">warning</span> Importante: Esta información puede variar según la privacidad definida por el usuario.
-            </p>
-            <canvas id="myChartRead" height="120"></canvas>
-        </section>
-
-        <!-- Conversaciones generadas -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#00897b;">chat_bubble</span>
-                Conversaciones generadas por Plantillas
-            </h3>
-            <canvas id="myChartGenerated" height="120"></canvas>
-        </section>
-
-        <!-- Engagement -->
-        <section class="chart-section">
-            <h3 class="chart-title">
-                <span class="material-icons" style="vertical-align:middle; color:#c2185b;">trending_up</span>
-                Engagement diario
-            </h3>
-            <canvas id="myChartEngagement" height="120"></canvas>
-        </section>
-    </div>
-
-</div>
-<?php
-$labels = [];
-$currentDate = $startTimestamp;
-
-while ($currentDate <= $endTimestamp) {
-    $labels[] = date('Y-m-d', $currentDate);
-    $currentDate = strtotime('+1 day', $currentDate); // Avanzar al siguiente día
+<style>
+.chart-download-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
 }
-?>
-<script>
-    // Obtener contexto
-    var ctx = document.getElementById('myChart').getContext('2d');
+.chart-download-btn .material-icons {
+  font-size: 14px;
+}
+.chart-section {
+  position: relative;
+}
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
 
-    // Datos
-    var data = {
-        labels: <?php echo json_encode($labels); ?>,
-        datasets: [{
-                label: 'Enviadas',
-                backgroundColor: 'rgba(33, 150, 243, 0.7)',
-                borderColor: 'rgba(33, 150, 243, 1)',
-                borderWidth: 2,
-                borderRadius: 6,
-                data: <?php echo json_encode($sentPerDay); ?>,
-                type: 'bar',
-                order: 1
-            },
-            {
-                label: 'Leídas',
-                borderColor: 'rgba(255, 152, 0, 1)',
-                backgroundColor: 'rgba(255, 152, 0, 0.15)',
-                borderWidth: 2,
-                tension: 0.4, // curva suave
-                fill: true,
-                pointBackgroundColor: 'rgba(255, 152, 0, 1)',
-                data: <?php echo json_encode($readPerDay); ?>,
-                type: 'line',
-                order: 2
-            },
-            {
-                label: 'Entregadas',
-                borderColor: 'rgba(76, 175, 80, 1)',
-                backgroundColor: 'rgba(76, 175, 80, 0.15)',
-                borderWidth: 2,
-                tension: 0.4,
-                fill: true,
-                pointBackgroundColor: 'rgba(76, 175, 80, 1)',
-                data: <?php echo json_encode($deliveredPerDay); ?>,
-                type: 'line',
-                order: 3
-            }
-        ]
+:root{
+  --card-bg: #deeaf4ff;
+  --border: #e6e9ef;
+  --muted: #6b7280;
+  --primary: #2b6cb0;
+  --accent: #f6ad55;
+  --success: #16a34a;
+  --danger: #e53e3e;
+  --radius: 12px;
+  --transition: 200ms ease;
+}
+
+.chart-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.canvas-wrap {
+  width: 100% !important;
+}
+
+canvas {
+  width: 100% !important;
+}
+
+
+/* Layout */
+.lh-wrapper {width: 100%;max-width: 100%;margin: 0; padding: 18px; box-sizing: border-box;}
+.lh-row { display: flex; flex-wrap: wrap; width: 100%; gap: 16px; align-items: stretch;}
+.lh-col {flex: 1 1 calc(20% - 16px);max-width: calc(20% - 16px);}
+@media (max-width: 1200px) {.lh-col {flex: 1 1 calc(25% - 16px);max-width: calc(25% - 16px); }}
+@media (max-width: 992px) {.lh-col { flex: 1 1 calc(33.333% - 16px);  max-width: calc(33.333% - 16px);}}
+@media (max-width: 576px) {.lh-col {  flex: 1 1 100%;  max-width: 100%;}}
+.lh-col { padding: 8px; box-sizing: border-box; }
+.lh-col-12 { flex: 0 0 100%; max-width:100%; }
+@media(min-width:576px){ .lh-col-md-4 { flex: 0 0 33.3333%; max-width:33.3333%; } }
+@media(min-width:992px){ .lh-col-lg-3 { flex: 0 0 20%; max-width:20%; } }
+
+h1.page-title { font-size:24px; margin:4px 0 12px 0; font-weight:700; }
+
+/* Form */
+.stats-form { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:16px; }
+.stats-form input[type="datetime-local"], .stats-form input[type="tel"], .stats-form select { padding:10px 12px; border-radius:8px; border:1px solid var(--border); background: #fff; font-size:14px; transition: box-shadow var(--transition), border-color var(--transition); }
+.stats-form input:focus, .stats-form select:focus { outline:none; box-shadow:0 4px 14px rgba(43,108,176,0.12); border-color: rgba(43,108,176,0.8); }
+.btn-submit { padding:10px 16px; border-radius:8px; background:var(--primary); color:#fff; border:none; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:8px; }
+.btn-submit .material-icons { font-size:18px; }
+
+/* Cards */
+.stat-card { background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:0 2px 10px rgba(12,14,22,0.04); transition: transform var(--transition), box-shadow var(--transition); position:relative; overflow:hidden; width: 100%; }
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(12,14,22,0.07); }
+.stat-title { font-size:13px; color:var(--muted); font-weight:700; margin-bottom:6px; text-transform:capitalize; }
+.stat-value { font-size:28px; font-weight:700; color:var(--primary); }
+.stat-sub { font-size:12px; color:var(--muted); margin-top:6px; display:block; }
+
+.icon-top-right { position:absolute; right:12px; top:10px; font-size:26px; opacity:0.95; transition: transform var(--transition); }
+.stat-card:hover .icon-top-right { transform:scale(1.12); }
+
+/* Chart sections */
+.container-graphics {margin-top:18px;display:grid;gap:18px;grid-template-columns: 1fr !important;}
+.chart-section { background:var(--card-bg); border:1px solid var(--border); padding:16px; border-radius:12px; box-shadow:0 4px 18px rgba(12,14,22,0.03); }
+.chart-title { font-size:16px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px; color: #0f1724; }
+.chart-warning { font-size:13px; color:var(--danger); margin:6px 0 12px; display:flex; gap:8px; align-items:center; }
+
+/* Canvas responsive wrapper */
+.canvas-wrap { width:100%; height:450px; }
+.canvas-wrap.small { height:350px; }
+.canvas-wrap.tall { height:550px; }
+
+.text-muted { color:var(--muted); font-size:13px; }
+.center { text-align:center; }
+.ellipsis { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; }
+
+.chart-title .material-icons { font-size:20px; color:var(--primary); }
+</style>
+
+
+<div class="lh-wrapper">
+
+  <h1 class="page-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Whatsapp statistics'); ?></h1>
+
+  <!-- Form -->
+  <form id="dateForm" class="stats-form" method="POST" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/index') ?>">
+    <input type="datetime-local" name="start" id="startDate" value="<?php echo (isset($startTimestamp) ? date('Y-m-d\TH:i', $startTimestamp) : date('Y-m-d\TH:i')); ?>">
+    <input type="datetime-local" name="end" id="endDate" value="<?php echo (isset($endTimestamp) ? date('Y-m-d\TH:i', $endTimestamp) : date('Y-m-d\TH:i')); ?>">
+    <input type="tel" name="phone" id="phoneNumber" placeholder="Número telefónico" pattern="[0-9]{10,15}" title="Please enter a valid phone number (10-15 digits).">
+    <select name="businessAccount" class="">
+      <option value=""><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Cuenta comercial'); ?></option>
+      <?php foreach ($businessAccount as $account): ?>
+        <option value="<?php echo $account->id; ?>"><?php echo htmlspecialchars($account->name); ?></option>
+      <?php endforeach; ?>
+    </select>
+
+    <button class="btn-submit" type="submit">
+      <span class="material-icons">search</span>
+      <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('system/buttons', 'Search'); ?>
+    </button>
+  </form>
+
+  <!-- Small stats tiles -->
+  <div class="lh-row">
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
+        <input type="hidden" name="status_statistic" value="1,2,3,6,7">
+        <input type="hidden" name="start" class="startDate">
+        <input type="hidden" name="end" class="endDate">
+        <button type="submit" class="stat-card" style="width:100%; text-align:left; border:none;">
+          <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Sent conversations'); ?></div>
+          <div class="stat-value"><?php echo isset($totalSent) ? $totalSent : '—'; ?></div>
+          <span class="material-icons icon-top-right" title="Enviadas">send</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
+        <input type="hidden" name="status_statistic" value="3">
+        <input type="hidden" name="start" class="startDate">
+        <input type="hidden" name="end" class="endDate">
+        <button type="submit" class="stat-card" style="width:100%; text-align:left; border:none;">
+          <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Tasa de envio en %'); ?></div>
+          <div class="stat-value"><?php echo isset($tasaEnvio) ? $tasaEnvio . '%' : '—'; ?></div>
+          <span class="material-icons icon-top-right" title="Tasa">trending_up</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Tasa de respuesta en %'); ?></div>
+        <div class="stat-value"><?php echo isset($engagement) ? $engagement . '%' : '—'; ?></div>
+        <span class="material-icons icon-top-right" title="Engagement">question_answer</span>
+      </div>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Incoming conversations'); ?></div>
+        <div class="stat-value"><?php echo isset($msg_services) ? $msg_services : '—'; ?></div>
+        <span class="material-icons icon-top-right" title="Incoming">inbox</span>
+      </div>
+    </div>
+
+    <!-- more cards (generated, avg read, fastest, slowest, delivered, failed, rejected, most repeated, day most sent, day max/min engagement) -->
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
+        <input type="hidden" name="conversation">
+        <input type="hidden" name="start" class="startDate">
+        <input type="hidden" name="end" class="endDate">
+        <button type="submit" class="stat-card" style="width:100%; text-align:left; border:none;">
+          <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Generated conversations'); ?></div>
+          <div class="stat-value"><?php echo isset($chatid) ? $chatid : '—'; ?></div>
+          <span class="material-icons icon-top-right" title="Generadas">chat_bubble</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Promedio de lectura'); ?></div>
+        <div class="stat-value"><?php echo isset($averageTime) ? $averageTime : '—'; ?></div>
+        <span class="material-icons icon-top-right" title="Promedio lectura">bar_chart</span>
+      </div>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Lectura más rápida'); ?></div>
+        <div class="stat-value"><?php echo isset($fastestTime) ? $fastestTime : 'Sin datos'; ?></div>
+        <span class="material-icons icon-top-right" title="Rápida">flash_on</span>
+      </div>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Lectura más lenta'); ?></div>
+        <div class="stat-value"><?php echo isset($slowestTime) ? $slowestTime : 'Sin datos'; ?></div>
+        <span class="material-icons icon-top-right" title="Lenta">schedule</span>
+      </div>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
+        <input type="hidden" name="status_statistic" value="2">
+        <input type="hidden" name="start" class="startDate">
+        <input type="hidden" name="end" class="endDate">
+        <button type="submit" class="stat-card" style="width:100%; text-align:left; border:none;">
+          <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Estado entregado'); ?></div>
+          <div class="stat-value"><?php echo isset($deliveredCount) ? $deliveredCount : '—'; ?></div>
+          <span class="material-icons icon-top-right" title="Entregado">check_circle</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>" class="indicatorForm">
+        <input type="hidden" name="status_statistic" value="6">
+        <input type="hidden" name="start" class="startDate">
+        <input type="hidden" name="end" class="endDate">
+        <button type="submit" class="stat-card" style="width:100%; text-align:left; border:none;">
+          <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Estado fallido'); ?></div>
+          <div class="stat-value"><?php echo isset($failedCount) ? $failedCount : '—'; ?></div>
+          <span class="material-icons icon-top-right" title="Fallido">error</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <form method="GET" action="<?php echo erLhcoreClassDesign::baseurl('fbmessenger/indicators') ?>">
+        <input type="hidden" name="status_statistic" value="7">
+        <input type="hidden" name="start" class="startDate">
+        <input type="hidden" name="end" class="endDate">
+        <button type="submit" class="stat-card" style="width:100%; text-align:left; border:none;">
+          <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Estado rechazado'); ?></div>
+          <div class="stat-value"><?php echo isset($rejectedCount) ? $rejectedCount : '—'; ?></div>
+          <span class="material-icons icon-top-right" title="Rechazado">cancel</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Plantilla más enviada'); ?></div>
+        <div class="stat-value ellipsis"><?php echo isset($mostRepeatedTemplate) ? $mostRepeatedTemplate : 'Sin datos'; ?></div>
+        <span class="stat-sub"><?php echo isset($maxFrequency) ? '(' . $maxFrequency . ')' : ''; ?></span>
+        <span class="material-icons icon-top-right" title="Plantilla">content_copy</span>
+      </div>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Día que se envió más plantillas'); ?></div>
+        <div class="stat-value"><?php echo isset($dayWithMostMessages) ? $dayWithMostMessages : 'Sin datos'; ?></div>
+        <span class="stat-sub"><?php echo isset($maxMessages) ? '(' . $maxMessages . ')' : ''; ?></span>
+      </div>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'día mayor tasa de interaccion'); ?></div>
+        <div class="stat-value"><?php echo isset($dayWithMaxEngagement) ? $dayWithMaxEngagement : 'Sin datos'; ?></div>
+      </div>
+    </div>
+
+    <div class="lh-col lh-col-12 lh-col-md-4 lh-col-lg-3">
+      <div class="stat-card">
+        <div class="stat-title"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'día menor tasa de interaccion'); ?></div>
+        <div class="stat-value"><?php echo isset($dayWithMinEngagement) ? $dayWithMinEngagement : 'Sin datos'; ?></div>
+      </div>
+    </div>
+
+  </div> <!-- end stats row -->
+
+  <!-- Charts area -->
+  <div class="container-graphics">
+    <!-- Plantillas enviadas -->
+    <section class="chart-section full-width">
+  <div class="chart-title"><span class="material-icons">send</span> Plantillas enviadas</div>
+  <div class="chart-warning"><span class="material-icons">warning</span> Importante: Esta información puede variar según la privacidad definida por el usuario.</div>
+  <div class="canvas-wrap small">
+    <canvas id="sentChart"></canvas>
+  </div>
+</section>
+
+    <!-- Chats sin respuesta -->
+    <section class="chart-section full-width">
+  <div class="chart-title"><span class="material-icons">chat_off</span> Chats sin respuesta</div>
+  <div class="chart-warning"><span class="material-icons">warning</span> Importante: Los chats sin respuesta corresponden al rango de fechas seleccionado.</div>
+  <div class="canvas-wrap small">
+    <canvas id="unansweredChart"></canvas>
+  </div>
+</section>
+
+    <!-- Promedio y pico de chats por hora -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">schedule</span> Promedio y pico de chats por hora</div>
+      <div class="canvas-wrap small"><canvas id="chatsHoraChart"></canvas></div>
+    </section>
+
+    <!-- Número de mensajes por hora -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">forum</span> Número de mensajes por hora</div>
+      <div class="canvas-wrap small"><canvas id="workLoadChart"></canvas></div>
+    </section>
+
+    <!-- Estado de las Plantillas -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">pie_chart</span> Estado de las Plantillas</div>
+      <div class="canvas-wrap"><canvas id="pieStatusChart"></canvas></div>
+    </section>
+
+    <!-- Promedio de tiempo de espera por asesor -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">hourglass_bottom</span> ⏳ Promedio de tiempo de espera por asesor</div>
+      <div class="canvas-wrap tall"><canvas id="graficoEspera"></canvas></div>
+    </section>
+
+    <!-- Envíos por agente -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">groups</span> Envíos por agente</div>
+      <div class="canvas-wrap"><canvas id="pieChartAgents"></canvas></div>
+    </section>
+
+    <!-- Plantillas leídas -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">drafts</span> Plantillas leídas</div>
+      <div class="chart-warning"><span class="material-icons">warning</span> Importante: Esta información puede variar según la privacidad definida por el usuario.</div>
+      <div class="canvas-wrap small"><canvas id="myChartRead"></canvas></div>
+    </section>
+
+    <!-- Conversaciones generadas por Plantillas -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">chat_bubble</span> Conversaciones generadas por Plantillas</div>
+      <div class="canvas-wrap small"><canvas id="myChartGenerated"></canvas></div>
+    </section>
+
+    <!-- Engagement diario -->
+    <section class="chart-section">
+      <div class="chart-title"><span class="material-icons">trending_up</span> Engagement diario</div>
+      <div class="canvas-wrap small"><canvas id="myChartEngagement"></canvas></div>
+    </section>
+  </div> <!-- end charts -->
+
+</div> <!-- lh-wrapper -->
+
+<!-- ---------------------------
+     SCRIPTS UNIFICADOS PARA CHARTS
+---------------------------- -->
+<script>
+  (function(){
+    // Utils
+    const safeParse = (v, fallback=[]) => { try { return (typeof v !== 'undefined') ? JSON.parse(JSON.stringify(v)) : fallback; } catch(e) { return fallback; } };
+    const labels = safeParse(<?php echo json_encode(isset($labels) ? $labels : []); ?>);
+    const messagesPerDay = safeParse(<?php echo json_encode(isset($messagesPerDay) ? $messagesPerDay : (object)[]); ?>);
+
+    // Colors
+    const palette = {
+      blue: 'rgba(33,150,243,0.85)',
+      blueSoft: 'rgba(33,150,243,0.15)',
+      orange: 'rgba(255,152,0,0.9)',
+      green: 'rgba(76,175,80,0.85)',
+      red: 'rgba(229,57,53,0.85)',
+      purple: 'rgba(123,31,162,0.85)',
+      teal: 'rgba(75,192,192,0.85)'
     };
 
-    // Opciones
-    var options = {
-        responsive: true,
-        plugins: {
-    legend: {
-        position: 'top',
-        align: 'end',
-        labels: {
-            usePointStyle: true,
-            boxWidth: 12,
-            padding: 15,
-            font: {
-                size: 13,
-                weight: '600'
+    // Datalabels common
+    const datalabelsCenter = {
+      anchor:'center', align:'center', color:'#fff', font:{weight:'700', size:12},
+      formatter: (value) => (value>0?value:'')
+    };
+
+    // Small helper to merge messagesPerDay into given dataset (if keys are date strings)
+    function mergeMessagesIntoDataset(baseLabels, datasetData, messagesObj){
+      // messagesObj may be { '2025-11-01': 5, ... } -> push values in same order as baseLabels
+      try{
+        const result = Array.isArray(datasetData) ? datasetData.slice(0) : [];
+        baseLabels.forEach((lbl, idx) => {
+          // if datasetData already has value at idx, keep it; else try messagesObj[lbl] or 0
+          if (typeof result[idx] === 'undefined' || result[idx] === null) {
+            result[idx] = (messagesObj && typeof messagesObj[lbl] !== 'undefined') ? messagesObj[lbl] : 0;
+          }
+        });
+        return result;
+      } catch(e){
+        return datasetData;
+      }
+    }
+
+    // Chart common options factory
+    function baseOptions(titleText){
+      return {
+        responsive:true,
+        plugins:{
+          legend:{ position:'top', labels:{ usePointStyle:true, boxWidth:12, padding:12, font:{size:12, weight:'600'} } },
+          datalabels: datalabelsCenter
+        },
+        scales: {
+          x: { grid:{ display:false }, ticks:{ font:{ size:12 } } },
+          y: { beginAtZero:true, ticks:{ font:{ size:12 } }, grid:{ color:'rgba(0,0,0,0.05)' } }
+        }
+      };
+    }
+
+    // -------- SENT CHART (sentChart) -----------
+    (function(){
+      const ctx = document.getElementById('sentChart')?.getContext('2d');
+      if(!ctx) return;
+      const sentPerDay = safeParse(<?php echo json_encode(isset($sentPerDay) ? $sentPerDay : []); ?>);
+      const readPerDay = safeParse(<?php echo json_encode(isset($readPerDay) ? $readPerDay : []); ?>);
+      const deliveredPerDay = safeParse(<?php echo json_encode(isset($deliveredPerDay) ? $deliveredPerDay : []); ?>);
+
+      // ensure arrays align with labels
+      const sentData = mergeMessagesIntoDataset(labels, sentPerDay, messagesPerDay);
+      const readData = mergeMessagesIntoDataset(labels, readPerDay, messagesPerDay);
+      const deliveredData = mergeMessagesIntoDataset(labels, deliveredPerDay, messagesPerDay);
+
+      const data = {
+        labels: labels,
+        datasets: [
+          { label:'Enviadas', type:'bar', data: sentData, backgroundColor: palette.blue, borderColor: palette.blue, borderWidth:2, borderRadius:6, order:1 },
+          { label:'Leídas', type:'line', data: readData, borderColor: palette.orange, backgroundColor: 'rgba(255,152,0,0.12)', tension:0.35, fill:true, pointBackgroundColor:palette.orange, order:2 },
+          { label:'Entregadas', type:'line', data: deliveredData, borderColor: palette.green, backgroundColor: 'rgba(76,175,80,0.12)', tension:0.35, fill:true, pointBackgroundColor:palette.green, order:3 }
+        ]
+      };
+
+      const options = baseOptions('Plantillas enviadas');
+      options.plugins.datalabels = { anchor:'end', align:'end', color:'#fff', font:{weight:'700', size:11}, formatter: v => v>0?v:'' };
+      options.scales.x.ticks.maxRotation = 0;
+
+      new Chart(ctx, { type:'bar', data, options, plugins:[ChartDataLabels] });
+    })();
+
+    // -------- UNANSWERED CHART -----------
+    (function(){
+      const ctx = document.getElementById('unansweredChart')?.getContext('2d');
+      if(!ctx) return;
+      const labelsUn = safeParse(<?php echo json_encode(isset($labelsUnanswered) ? $labelsUnanswered : []); ?>);
+      const totalsUn = safeParse(<?php echo json_encode(isset($totalesUnanswered) ? $totalesUnanswered : []); ?>);
+
+      new Chart(ctx, {
+        type:'bar',
+        data:{ labels: labelsUn, datasets:[ { label:'Chats sin respuesta', data: totalsUn, backgroundColor: 'rgba(229,57,53,0.85)', borderColor:'rgba(229,57,53,1)', borderWidth:1, borderRadius:6 } ] },
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+        padding: 0
+    },
+    plugins: {
+        legend: {
+            display: true,
+            labels: {
+                usePointStyle: true,
+                padding: 10,
+                font: {
+                    size: 12,
+                    weight: '600'
+                }
             }
+        },
+        tooltip: {
+            callbacks: {
+                label: (c) => ` ${c.parsed.y} chats`
+            }
+        },
+        datalabels: {
+            anchor: 'center',
+            align: 'center',
+            color: '#fff',
+            font: {
+                weight: '700',
+                size: 11
+            },
+            formatter: v => v > 0 ? v : ''
         }
     },
-    datalabels: {
-        anchor: 'center',   // 👈 cambia de 'end' a 'center'
-        align: 'center',    // 👈 centra dentro de la barra
-        color: '#fff',      // 👈 blanco para que contraste con la barra azul
-        font: {
-            weight: 'bold',
-            size: 12
+    scales: {
+        y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Número de chats'
+            },
+            grid: {
+                color: 'rgba(0,0,0,0.05)'
+            }
         },
-        formatter: function(value) {
-            return value > 0 ? value : '';
+        x: {
+            offset: false,
+            grid: {
+                display: false
+            }
         }
     }
 },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                },
-                ticks: {
-                    font: {
-                        size: 12
-                    }
-                }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    font: {
-                        size: 12
-                    }
-                },
-                grid: {
-                    color: 'rgba(0,0,0,0.05)'
-                }
-            }
-        }
-    };
 
-    // Crear gráfico
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options,
-        plugins: [ChartDataLabels]
-    });
+        plugins:[ChartDataLabels]
+      });
+    })();
 
-    // Agregar dinámicamente messagesPerDay
-    var messagesPerDay = <?php echo json_encode($messagesPerDay); ?>;
-    Object.keys(messagesPerDay).forEach(function(date) {
-        if (!data.labels.includes(date)) {
-            data.labels.push(date);
-        }
-        data.datasets[0].data.push(messagesPerDay[date]); // Enviadas
-    });
+    // -------- CHATS HORA (chatsHoraChart) -----------
+    (function(){
+      const ctx = document.getElementById('chatsHoraChart')?.getContext('2d');
+      if(!ctx) return;
+      const labelsHora   = safeParse(<?php echo json_encode(isset($labels) ? $labels : []); ?>);
+      const totalesHora  = safeParse(<?php echo json_encode(isset($totales) ? $totales : []); ?>);
+      const promediosHora= safeParse(<?php echo json_encode(isset($promedios) ? $promedios : []); ?>);
+      const maximosHora  = safeParse(<?php echo json_encode(isset($maximos) ? $maximos : []); ?>);
 
-    myChart.update();
-</script>
-
-<script>
-    // Datos pasados desde PHP
-    const labelsUnanswered = <?php echo json_encode($labelsUnanswered); ?>;
-    const totalesUnanswered = <?php echo json_encode($totalesUnanswered); ?>;
-
-    // Renderizar gráfico
-    const ctxUnanswered = document.getElementById('unansweredChart').getContext('2d');
-    new Chart(ctxUnanswered, {
-        type: 'bar',
-        data: {
-            labels: labelsUnanswered,
-            datasets: [{
-                label: 'Chats sin respuesta',
-                data: totalesUnanswered,
-                backgroundColor: 'rgba(229, 57, 53, 0.7)', // rojo suave
-                borderColor: 'rgba(229, 57, 53, 1)',       // rojo fuerte
-                borderWidth: 1,
-                borderRadius: 6
-            }]
+      new Chart(ctx, {
+        type:'bar',
+        data:{
+          labels: labelsHora,
+          datasets:[
+            { type:'bar', label:'Total de chats', data: totalesHora, backgroundColor:'rgba(54,162,235,0.5)', borderColor:'rgba(54,162,235,1)', borderWidth:1, borderRadius:6 },
+            { type:'line', label:'Promedio de chats', data: promediosHora, borderColor:'rgba(255,206,86,1)', backgroundColor:'rgba(255,206,86,0.2)', fill:false, tension:0.3, borderWidth:2, pointRadius:3 },
+            { type:'line', label:'Pico máximo de chats', data: maximosHora, borderColor:'rgba(255,99,132,1)', backgroundColor:'rgba(255,99,132,0.2)', fill:false, tension:0.3, borderWidth:2, pointRadius:3 }
+          ]
         },
         options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    labels: {
-                        usePointStyle: true,
-                        padding: 15,
-                        font: {
-                            size: 13,
-                            weight: '600'
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: (context) => ` ${context.parsed.y} chats`
-                    }
-                },
-                datalabels: {
-                    anchor: 'center',   // posición dentro de la barra
-                    align: 'center',    // centrado vertical
-                    color: '#fff',      // blanco para contraste
-                    font: {
-                        weight: 'bold',
-                        size: 12
-                    },
-                    formatter: function(value) {
-                        return value > 0 ? value : '';
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    },
-                    title: {
-                        display: true,
-                        text: 'Número de chats'
-                    },
-                    grid: {
-                        color: 'rgba(0,0,0,0.05)'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Periodo (mes/día)'
-                    },
-                    grid: {
-                        display: false
-                    }
-                }
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+        padding: 0
+    },
+    plugins: {
+        tooltip: {
+            mode: 'index',
+            intersect: false
+        },
+        legend: {
+            position: 'top'
+        }
+    },
+    scales: {
+        y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Número de chats'
             }
         },
-        plugins: [ChartDataLabels] // 👈 importante: activar plugin
-    });
-</script>
-
-<script>
-    // Variables enviadas desde PHP
-    const labelsHora   = <?php echo json_encode($labels); ?>;          // ["00:00", "01:00", ...]
-    const totalesHora  = <?php echo json_encode($totales); ?>;         // total por hora
-    const promediosHora= <?php echo json_encode($promedios); ?>;       // promedio por hora
-    const maximosHora  = <?php echo json_encode($maximos); ?>;         // pico por hora
-
-    const ctxHora = document.getElementById('chatsHoraChart').getContext('2d');
-    new Chart(ctxHora, {
-        type: 'bar',
-        data: {
-            labels: labelsHora,
-            datasets: [
-                {
-                    type: 'bar',
-                    label: 'Total de chats',
-                    data: totalesHora,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1,
-                    borderRadius: 6
-                },
-                {
-                    type: 'line',
-                    label: 'Promedio de chats',
-                    data: promediosHora,
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                    fill: false,
-                    tension: 0.3,
-                    borderWidth: 2,
-                    pointRadius: 4
-                },
-                {
-                    type: 'line',
-                    label: 'Pico máximo de chats',
-                    data: maximosHora,
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    fill: false,
-                    tension: 0.3,
-                    borderWidth: 2,
-                    pointRadius: 4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                tooltip: {
-                    mode: 'index',
-                    intersect: false
-                },
-                legend: {
-                    position: 'top'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Número de chats'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Hora del día'
-                    }
-                }
+        x: {
+            offset: false,
+            title: {
+                display: true,
+                text: 'Hora del día'
             }
         }
-    });
-</script>
+    }
+},
 
+      });
+    })();
 
-<script>
-    var labels = [
-        "00h", "01h", "02h", "03h", "04h", "05h", "06h",
-        "07h", "08h", "09h", "10h", "11h", "12h",
-        "13h", "14h", "15h", "16h", "17h", "18h",
-        "19h", "20h", "21h", "22h", "23h"
-    ];
+    // -------- WORKLOAD (workLoadChart) -----------
+    (function(){
+      const ctx = document.getElementById('workLoadChart')?.getContext('2d');
+      if(!ctx) return;
+      const wlLabels = ['00h','01h','02h','03h','04h','05h','06h','07h','08h','09h','10h','11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h','23h'];
+      const workload = safeParse(<?php echo json_encode(isset($workLoadStats['total']) ? $workLoadStats['total'] : []); ?>);
 
-    var data = {
-        labels: labels,
-        datasets: [{
-            label: 'Chats por hora',
-            backgroundColor: 'rgba(33, 150, 243, 0.8)',
-            borderColor: 'rgba(33, 150, 243, 1)',
-            borderWidth: 2,
-            borderRadius: 6,
-            data: <?php echo json_encode($workLoadStats['total']); ?>
-        }]
-    };
-
-    var ctx = document.getElementById('workLoadChart').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
+      new Chart(ctx, {
+        type:'bar',
+        data:{ labels: wlLabels, datasets:[ { label:'Chats por hora', data: workload, backgroundColor: palette.blue, borderColor: palette.blue, borderWidth:2, borderRadius:6 } ] },
         options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false // ocultamos leyenda porque solo hay un dataset
-                },
-                datalabels: {
-                    anchor: 'center', // centra el label dentro de la barra
-                    align: 'center', // lo alinea en el centro vertical
-                    color: 'white', // color del texto dentro de la barra (elige uno que contraste)
-                    font: {
-                        weight: 'bold',
-                        size: 16
-                    },
-                    formatter: function(value) {
-                        return value > 0 ? value : '';
-                    }
-                }
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+        padding: 0
+    },
+    plugins: {
+        legend: { display: false },
+        datalabels: {
+            anchor: 'center',
+            align: 'center',
+            color: '#fff',
+            font: {
+                weight: '700',
+                size: 12
             },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        font: {
-                            size: 12
-                        }
-                    },
-                    categoryPercentage: 0.6,
-                    barPercentage: 0.9,
-                    title: {
-                        display: true,
-                        text: 'Hora del día', // Título del eje X
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        color: '#333'
-                    }
+            formatter: v => v > 0 ? v : ''
+        }
+    },
+    scales: {
+        x: {
+            grid: { display: false },
+            offset: false,
+            categoryPercentage: 0.6,
+            barPercentage: 0.9,
+            title: {
+                display: true,
+                text: 'Hora del día',
+                font: { size: 13, weight: '700' }
+            }
+        },
+        y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Cantidad de chats'
+            },
+            grid: {
+                color: 'rgba(0,0,0,0.05)'
+            }
+        }
+    }
+},
+        plugins:[ChartDataLabels]
+      });
+    })();
+
+    // -------- PIE STATUS (pieStatusChart) -----------
+    (function(){
+      const ctx = document.getElementById('pieStatusChart')?.getContext('2d');
+      if(!ctx) return;
+      const totals = [
+        <?php echo isset($totalRead) ? $totalRead : 0 ?>,
+        <?php echo isset($sentCount) ? $sentCount : 0 ?>,
+        <?php echo isset($failedCount) ? $failedCount : 0 ?>,
+        <?php echo isset($deliveredCount) ? $deliveredCount : 0 ?>,
+        <?php echo isset($rejectedCount) ? $rejectedCount : 0 ?>,
+        <?php echo isset($pendingCount) ? $pendingCount : 0 ?>
+      ];
+      const labelsPie = ['Leídos','Enviado','Fallido','Entregado','Rechazado','Pendiente'];
+      const bg = ['rgba(255,99,132,0.8)','rgba(54,162,235,0.8)','rgba(255,206,86,0.8)','rgba(75,192,192,0.8)','rgba(153,102,255,0.8)','rgba(46,204,113,0.8)'];
+
+      new Chart(ctx, {
+        type:'pie',
+        data:{ labels:labelsPie, datasets:[ { data: totals, backgroundColor:bg, borderColor:'#fff', borderWidth:2 } ] },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{ position:'right', labels:{ usePointStyle:true, padding:12, font:{ size:12, weight:'600' }, generateLabels: function(chart){ const data = chart.data; return data.labels.map((label,i)=>({ text: `${label}: ${data.datasets[0].data[i]}`, fillStyle:data.datasets[0].backgroundColor[i], index:i })); } } }, datalabels:{ color:'#fff', font:{weight:'700', size:11}, formatter:function(value, ctx){ if(value===0) return ''; let total = ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0); return value + ' (' + ((value/total)*100).toFixed(1) + '%)'; } } }
+        },
+        plugins:[ChartDataLabels]
+      });
+    })();
+
+    // -------- GRAFICO ESPERA (graficoEspera) -----------
+    (function(){
+      const ctx = document.getElementById('graficoEspera')?.getContext('2d');
+      if(!ctx) return;
+      const asesores = safeParse(<?php echo json_encode(isset($asesores) ? $asesores : []); ?>);
+      const promediosEspera = safeParse(<?php echo json_encode(isset($promediosEspera) ? $promediosEspera : []); ?>);
+
+      function formatTiempo(segundos){
+        if(!segundos && segundos !== 0) return '';
+        segundos = Number(segundos);
+        if(segundos < 60) return segundos + ' seg';
+        if(segundos < 3600){ const m = Math.floor(segundos/60); const s = segundos % 60; return m + ' min' + (s>0?(' ' + s + ' seg'):''); }
+        const h = Math.floor(segundos/3600), rm = Math.floor((segundos%3600)/60); return h + ' h' + (rm>0?(' ' + rm + ' min'):'');
+      }
+
+      new Chart(ctx, {
+        type:'bar',
+        data:{ labels: asesores, datasets:[ { label:'Promedio de espera', data: promediosEspera, backgroundColor: 'rgba(54,162,235,0.85)', borderColor:'rgba(54,162,235,1)', borderWidth:1 } ] },
+        options:{
+          responsive:true,
+          plugins:{
+            legend:{ display:false },
+            tooltip:{ callbacks:{ label: (c) => formatTiempo(c.raw) } },
+            datalabels:{ anchor:'center', align:'center', color:'#fff', font:{weight:'700', size:11}, formatter: v => formatTiempo(v) }
+          },
+          scales:{ y:{ beginAtZero:true, ticks:{ callback: v => formatTiempo(v) }, title:{ display:true, text:'Tiempo de espera' } }, x:{ title:{ display:true, text:'Asesores' } } }
+        },
+        plugins:[ChartDataLabels]
+      });
+    })();
+
+    // -------- PIE AGENTS (pieChartAgents) -----------
+    (function(){
+      const ctx = document.getElementById('pieChartAgents')?.getContext('2d');
+      if(!ctx) return;
+      const agentNames = safeParse(<?php echo json_encode(isset($agentNames) ? $agentNames : []); ?>);
+      const messageCounts = safeParse(<?php echo json_encode(isset($messageCounts) ? $messageCounts : []); ?>);
+      const bgColors = ['rgba(128,0,128,0.7)','rgba(54,162,235,0.7)','rgba(255,99,132,0.7)','rgba(255,206,86,0.7)','rgba(75,192,192,0.7)','rgba(153,102,255,0.7)'];
+
+      new Chart(ctx, {
+        type:'pie',
+        data:{ labels: agentNames, datasets:[ { data: messageCounts, backgroundColor: bgColors, borderColor:'#fff', borderWidth:2 } ] },
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+        padding: 0
+    },
+    plugins: {
+        legend: {
+            position: 'right',
+            labels: {
+                usePointStyle: true,
+                padding: 12,
+                font: {
+                    size: 12,
+                    weight: '600'
                 },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        font: {
-                            size: 12
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(0,0,0,0.05)'
-                    },
-                    title: {
-                        display: true,
-                        text: 'Cantidad de chats', // Título del eje Y
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        color: '#333'
-                    }
+                generateLabels: function(chart) {
+                    const d = chart.data;
+                    return d.labels.map((label, i) => ({
+                        text: `${label}: ${d.datasets[0].data[i]}`,
+                        fillStyle: d.datasets[0].backgroundColor[i],
+                        index: i
+                    }));
                 }
             }
         },
-        plugins: [ChartDataLabels]
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var ctx = document.getElementById('graficoEspera').getContext('2d');
-
-        function formatTiempo(segundos) {
-            if (segundos < 60) return segundos + " seg";
-            if (segundos < 3600) {
-                let min = Math.floor(segundos / 60);
-                let resto = segundos % 60;
-                return min + " min" + (resto > 0 ? " " + resto + " seg" : "");
+        datalabels: {
+            color: '#fff',
+            font: {
+                weight: '700',
+                size: 11
+            },
+            formatter: function(value, ctx) {
+                let total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                return value + ' (' + ((value / total) * 100).toFixed(1) + '%)';
             }
-            let horas = Math.floor(segundos / 3600);
-            let restoMin = Math.floor((segundos % 3600) / 60);
-            return horas + " h" + (restoMin > 0 ? " " + restoMin + " min" : "");
         }
+    }
+},
+        plugins:[ChartDataLabels]
+      });
+    })();
 
-        var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: <?php echo json_encode($asesores); ?>,
-                datasets: [{
-                    label: 'Promedio de espera',
-                    data: <?php echo json_encode($promediosEspera); ?>,
-                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
+    // -------- READ CHART (myChartRead) -----------
+    (function(){
+      const ctx = document.getElementById('myChartRead')?.getContext('2d');
+      if(!ctx) return;
+      const readPer = safeParse(<?php echo json_encode(isset($readPerDay) ? $readPerDay : []); ?>);
+      const readData = mergeMessagesIntoDataset(labels, readPer, messagesPerDay);
 
-                    tooltip: {
-                        callbacks: {
-                            label: function(ctx) {
-                                return formatTiempo(ctx.raw);
-                            }
-                        }
-                    },
-                    datalabels: {
-                        anchor: 'center', // dentro de la barra
-                        align: 'center', // centrado vertical y horizontal
-                        color: '#fff', // blanco para que contraste
-                        font: {
-                            weight: 'bold',
-                            size: 16
-                        },
-                        formatter: function(value) {
-                            return formatTiempo(value);
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return formatTiempo(value);
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Tiempo de espera'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Asesores'
-                        }
-                    }
-                }
+      new Chart(ctx, {
+        type:'bar',
+        data:{ labels: labels, datasets:[ { label:'Leídas', data: readData, backgroundColor: 'rgba(255,206,86,0.9)', borderColor:'rgba(255,206,86,1)', borderWidth:2, borderRadius:6 } ] },
+       options: {
+    ...baseOptions('Leídas'),
+    maintainAspectRatio: false,
+    layout: {
+        padding: 0
+    },
+    plugins: {
+        ...baseOptions('Leídas').plugins,
+        datalabels: {
+            anchor: 'center',
+            align: 'center',
+            color: '#111',
+            font: {
+                weight: '700',
+                size: 12
             },
-            plugins: [ChartDataLabels]
+            formatter: v => v > 0 ? v : ''
+        }
+    },
+    scales: {
+        x: {
+            ...(baseOptions('Leídas').scales?.x || {}),
+            grid: { display: false },
+            offset: false,
+            categoryPercentage: 0.6,
+            barPercentage: 0.9
+        },
+        y: {
+            ...(baseOptions('Leídas').scales?.y || {}),
+            beginAtZero: true,
+            grid: {
+                color: 'rgba(0,0,0,0.05)'
+            }
+        }
+    }
+},
+        plugins:[ChartDataLabels]
+      });
+    })();
+
+    // -------- GENERATED CHART (myChartGenerated) -----------
+    (function(){
+      const ctx = document.getElementById('myChartGenerated')?.getContext('2d');
+      if(!ctx) return;
+      const genPerDay = safeParse(<?php echo json_encode(isset($generatedConversationPerDay) ? $generatedConversationPerDay : []); ?>);
+      const genData = mergeMessagesIntoDataset(labels, genPerDay, messagesPerDay);
+
+      new Chart(ctx, {
+        type:'bar',
+        data:{ labels: labels, datasets:[ { label:'Conversaciones generadas', data: genData, backgroundColor: palette.teal, borderColor: 'rgba(75,192,192,1)', borderWidth:2, borderRadius:6 } ] },
+        options: {
+    ...baseOptions('Conversaciones generadas'),
+    maintainAspectRatio: false,
+    layout: {
+        padding: 0
+    },
+    scales: {
+        ...baseOptions('Conversaciones generadas').scales,
+        x: {
+            ...(baseOptions('Conversaciones generadas').scales?.x || {}),
+            offset: false
+        },
+        y: {
+            ...(baseOptions('Conversaciones generadas').scales?.y || {}),
+            beginAtZero: true
+        }
+    },
+    plugins: {
+        ...baseOptions('Conversaciones generadas').plugins,
+        datalabels: {
+            anchor: 'center',
+            align: 'center',
+            color: '#fff',
+            font: {
+                weight: '700',
+                size: 12
+            },
+            formatter: v => v > 0 ? v : ''
+        }
+    }
+},
+
+        plugins:[ChartDataLabels]
+      });
+    })();
+
+    // -------- ENGAGEMENT CHART (myChartEngagement) -----------
+    (function(){
+      const ctx = document.getElementById('myChartEngagement')?.getContext('2d');
+      if(!ctx) return;
+      const engagementValues = safeParse(<?php echo json_encode(isset($engagementValues) ? $engagementValues : []); ?>);
+      const engData = mergeMessagesIntoDataset(labels, engagementValues, messagesPerDay);
+
+      new Chart(ctx, {
+        type:'bar',
+        data:{ labels: labels, datasets:[ { label:'Engagement', data: engData, backgroundColor: 'rgba(54,162,235,0.85)', borderColor:'rgba(54,162,235,1)', borderWidth:2, borderRadius:6 } ] },
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+        padding: 0
+    },
+    scales: {
+        x: {
+            offset: false
+        },
+        y: {
+            beginAtZero: true
+        }
+    }
+},
+        plugins:[ChartDataLabels]
+      });
+    })();
+
+    // -------- Indicator forms date sync -----------
+    document.addEventListener('DOMContentLoaded', function(){
+      const dateForm = document.getElementById('dateForm');
+      const startDateField = document.getElementById('startDate');
+      const endDateField = document.getElementById('endDate');
+      const indicatorForms = document.querySelectorAll('.indicatorForm');
+
+      function updateIndicatorForms(){
+        const startDate = startDateField.value;
+        const endDate = endDateField.value;
+        indicatorForms.forEach(function(form){
+          const s = form.querySelector('.startDate');
+          const e = form.querySelector('.endDate');
+          if(s) s.value = startDate;
+          if(e) e.value = endDate;
         });
-    });
-</script>
+      }
 
-<script>
-    // Obtener context de Canvas
-    var ctx = document.getElementById('pieChartAgents').getContext('2d');
+      // update on change and before submitting each indicator form
+      startDateField.addEventListener('change', updateIndicatorForms);
+      endDateField.addEventListener('change', updateIndicatorForms);
+      indicatorForms.forEach(function(form){
+        form.addEventListener('submit', function(){ updateIndicatorForms(); });
+      });
 
-    // Datos para el gráfico
-    var data = {
-        labels: <?php echo json_encode($agentNames); ?>,
-        datasets: [{
-            data: <?php echo json_encode($messageCounts); ?>,
-            backgroundColor: [
-                'rgba(128, 0, 128, 0.6)',
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(153, 102, 255, 0.6)'
-            ],
-            borderColor: '#fff',
-            borderWidth: 2
-        }]
-    };
-
-    // Opciones del gráfico
-    var options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'right',
-                labels: {
-                    usePointStyle: true,
-                    padding: 15,
-                    font: {
-                        size: 16,
-                        weight: '600'
-                    },
-                    generateLabels: function(chart) {
-                        const data = chart.data;
-                        if (data.labels.length && data.datasets.length) {
-                            return data.labels.map((label, i) => {
-                                const value = data.datasets[0].data[i];
-                                return {
-                                    text: `${label}: ${value}`,
-                                    fillStyle: data.datasets[0].backgroundColor[i],
-                                    strokeStyle: data.datasets[0].backgroundColor[i],
-                                    lineWidth: 1,
-                                    hidden: isNaN(value) || chart.getDatasetMeta(0).data[i].hidden,
-                                    index: i
-                                };
-                            });
-                        }
-                        return [];
-                    }
-                }
-            },
-            datalabels: {
-                color: '#fff',
-                font: {
-                    weight: 'bold',
-                    size: 16
-                },
-                formatter: function(value, context) {
-                    let dataset = context.chart.data.datasets[0];
-                    let total = dataset.data.reduce((a, b) => a + b, 0);
-                    let percentage = ((value / total) * 100).toFixed(1) + "%";
-                    return value + " (" + percentage + ")";
-                }
-            }
-        }
-    };
-
-    // Crear el gráfico de pastel
-    var pieChart = new Chart(ctx, {
-        type: 'pie',
-        data: data,
-        options: options,
-        plugins: [ChartDataLabels]
-    });
-</script>
-
-
-
-<script>
-    // Obtener context de Canvas
-    var ctx = document.getElementById('pieChart').getContext('2d');
-
-    // Datos para el gráfico
-    var data = {
-        labels: ['Leídos', 'Enviado', 'Fallido', 'Entregado', 'Rechazado', 'Pendiente'],
-        datasets: [{
-            data: [
-                <?php echo $totalRead ?>,
-                <?php echo $sentCount ?>,
-                <?php echo $failedCount ?>,
-                <?php echo $deliveredCount ?>,
-                <?php echo $rejectedCount ?>,
-                <?php echo $pendingCount ?>
-            ],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(153, 102, 255, 0.6)',
-                'rgba(46, 204, 113, 0.6)'
-            ],
-            borderColor: "#fff",
-            borderWidth: 2
-        }]
-    };
-
-    // Opciones del gráfico
-    var options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'right',
-                labels: {
-                    usePointStyle: true,
-                    padding: 15,
-                    font: {
-                        size: 16,
-                        weight: '600'
-                    },
-                    generateLabels: function(chart) {
-                        const data = chart.data;
-                        if (data.labels.length && data.datasets.length) {
-                            return data.labels.map((label, i) => {
-                                const value = data.datasets[0].data[i];
-                                if (value === 0) return null; // ignorar 0
-                                return {
-                                    text: `${label}: ${value}`,
-                                    fillStyle: data.datasets[0].backgroundColor[i],
-                                    strokeStyle: data.datasets[0].backgroundColor[i],
-                                    lineWidth: 1,
-                                    hidden: false,
-                                    index: i
-                                };
-                            }).filter(item => item !== null);
-                        }
-                        return [];
-                    }
-                }
-            },
-            datalabels: {
-                color: '#fff',
-                font: {
-                    weight: 'bold',
-                    size: 16
-                },
-                formatter: function(value, context) {
-                    if (value === 0) return ''; // ignorar 0
-                    let dataset = context.chart.data.datasets[0];
-                    let total = dataset.data.reduce((a, b) => a + b, 0);
-                    let percentage = ((value / total) * 100).toFixed(1) + "%";
-                    return value + " (" + percentage + ")";
-                }
-            }
-        }
-    };
-
-    // Crear el gráfico de pastel
-    var pieChart = new Chart(ctx, {
-        type: 'pie',
-        data: data,
-        options: options,
-        plugins: [ChartDataLabels]
-    });
-</script>
-
-<script>
-    // Obtener el contexto del lienzo
-    var ctx = document.getElementById('myChartRead').getContext('2d');
-
-    // Datos
-    var data = {
-        labels: <?php echo json_encode($labels); ?>,
-        datasets: [{
-            label: 'Leídas',
-            backgroundColor: 'rgba(255, 206, 86, 0.8)',
-            borderColor: 'rgba(255, 206, 86, 1)',
-            borderWidth: 2,
-            borderRadius: 6,
-            data: <?php echo json_encode($readPerDay); ?>
-        }]
-    };
-
-    // Configuración del gráfico
-    var options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-                align: 'end',
-                labels: {
-                    usePointStyle: true,
-                    font: {
-                        size: 16,
-                        weight: '600'
-                    },
-                    padding: 15
-                }
-            },
-            datalabels: {
-                anchor: 'center',
-                align: 'center',
-                color: 'black',
-                font: {
-                    weight: 'bold',
-                    size: 16
-                },
-                formatter: function(value) {
-                    return value > 0 ? value : '';
-                }
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                },
-                ticks: {
-                    font: {
-                        size: 16
-                    }
-                },
-                categoryPercentage: 0.6,
-                barPercentage: 0.9
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    font: {
-                        size: 16
-                    }
-                },
-                grid: {
-                    color: 'rgba(0,0,0,0.05)'
-                }
-            }
-        }
-    };
-
-    // Crear el gráfico
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options,
-        plugins: [ChartDataLabels]
+      // initial populate
+      updateIndicatorForms();
     });
 
-    // Agregar dinámicamente mensajes por día
-    var messagesPerDay = <?php echo json_encode($messagesPerDay); ?>;
-    Object.keys(messagesPerDay).forEach(function(date) {
-        if (!data.labels.includes(date)) data.labels.push(date);
-        data.datasets[0].data.push(messagesPerDay[date]);
-    });
-
-    myChart.update();
-</script>
-
-<script>
-    // Obtener el contexto del lienzo
-    var ctx = document.getElementById('myChartGenerated').getContext('2d');
-
-    // Datos
-    var data = {
-        labels: <?php echo json_encode($labels); ?>,
-        datasets: [{
-            label: 'Conversaciones generadas',
-            backgroundColor: 'rgba(75, 192, 192, 0.8)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 2,
-            borderRadius: 6,
-            data: <?php echo json_encode($generatedConversationPerDay); ?>
-        }]
-    };
-
-    // Configuración del gráfico
-    var options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-                align: 'end',
-                labels: {
-                    usePointStyle: true,
-                    font: {
-                        size: 16,
-                        weight: '600'
-                    },
-                    padding: 15
-                }
-            },
-            datalabels: {
-                anchor: 'center',
-                align: 'center',
-                color: 'white',
-                font: {
-                    weight: 'bold',
-                    size: 16
-                },
-                formatter: function(value) {
-                    return value > 0 ? value : '';
-                }
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                },
-                categoryPercentage: 0.6,
-                barPercentage: 0.9
-            },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0,0,0,0.05)'
-                },
-                ticks: {
-                    font: {
-                        size: 16
-                    }
-                }
-            }
-        }
-    };
-
-    // Crear el gráfico
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options,
-        plugins: [ChartDataLabels]
-    });
-
-    // Agregar dinámicamente mensajes por día
-    var messagesPerDay = <?php echo json_encode($messagesPerDay); ?>;
-    Object.keys(messagesPerDay).forEach(function(date) {
-        if (!data.labels.includes(date)) data.labels.push(date);
-        data.datasets[0].data.push(messagesPerDay[date]);
-    });
-
-    myChart.update();
-</script>
-
-<script>
-    // Obtener el contexto del lienzo
-    var ctx = document.getElementById('myChartEngagement').getContext('2d');
-
-    // Datos
-    var data = {
-        labels: <?php echo json_encode($labels); ?>,
-        datasets: [{
-            label: 'Engagement',
-            backgroundColor: 'rgba(54, 162, 235, 0.8)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 2,
-            borderRadius: 6,
-            data: <?php echo json_encode($engagementValues); ?>
-        }]
-    };
-
-    // Configuración del gráfico
-    var options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-                align: 'end',
-                labels: {
-                    usePointStyle: true,
-                    font: {
-                        size: 16,
-                        weight: '600'
-                    },
-                    padding: 15
-                }
-            },
-            datalabels: {
-                anchor: 'center',
-                align: 'center',
-                color: 'white',
-                font: {
-                    weight: 'bold',
-                    size: 16
-                },
-                formatter: function(value) {
-                    return value > 0 ? value + '%' : '';
-                }
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                },
-                categoryPercentage: 0.6,
-                barPercentage: 0.9
-            },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0,0,0,0.05)'
-                },
-                ticks: {
-                    font: {
-                        size: 12
-                    }
-                }
-            }
-        }
-    };
-
-    // Crear el gráfico
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options,
-        plugins: [ChartDataLabels]
-    });
-
-    // Agregar dinámicamente mensajes por día
-    var messagesPerDay = <?php echo json_encode($messagesPerDay); ?>;
-    Object.keys(messagesPerDay).forEach(function(date) {
-        if (!data.labels.includes(date)) data.labels.push(date);
-        data.datasets[0].data.push(messagesPerDay[date]);
-    });
-
-    myChart.update();
-</script>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dateForm = document.getElementById('dateForm');
-        const startDateField = document.getElementById('startDate');
-        const endDateField = document.getElementById('endDate');
-        const indicatorForms = document.querySelectorAll('.indicatorForm');
-
-        function updateIndicatorForms() {
-            const startDate = startDateField.value;
-            const endDate = endDateField.value;
-
-            indicatorForms.forEach(function(form) {
-                form.querySelector('.startDate').value = startDate;
-                form.querySelector('.endDate').value = endDate;
-            });
-        }
-
-        indicatorForms.forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                updateIndicatorForms();
-            });
-        });
-    });
+  })();
 </script>

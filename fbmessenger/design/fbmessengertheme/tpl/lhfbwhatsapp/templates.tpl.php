@@ -1,89 +1,152 @@
 <style>
+    h1,
+    h2.fs-4 {
+        font-weight: 600;
+    }
+
     .search-form {
-        max-width: 800px;
-        /* Ancho máximo del formulario */
-        margin: 0;
-        /* Sin margen superior ni inferior */
+        max-width: 100%;
+        margin-bottom: 1rem;
         display: flex;
-        /* Flex para alineación */
         justify-content: flex-start;
-        /* Alinear a la izquierda */
     }
 
     .input-group {
         display: flex;
         gap: 10px;
-        /* Espacio entre los elementos */
         width: 100%;
-        /* Hacer que el grupo ocupe todo el ancho disponible */
     }
 
     .form-control,
     .form-select {
         flex: 1;
-        /* Hacer que los campos ocupen espacio igual */
         padding: 10px;
-        /* Espaciado interno */
         border: 1px solid #ced4da;
-        /* Borde */
-        border-radius: 4px;
-        /* Bordes redondeados */
+        border-radius: 8px;
+        font-size: 0.95rem;
     }
 
     .form-control:focus,
     .form-select:focus {
-        border-color: #007bff;
-        /* Color del borde en foco */
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        /* Sombra en foco */
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, .25);
     }
 
-    .btn-primary {
-        padding: 10px 20px;
-        /* Espaciado interno del botón */
-        border-radius: 4px;
-        /* Bordes redondeados */
+    .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
     }
 
+    .btn-primary,
+    .btn-outline-primary:hover {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+        box-shadow: 0 2px 6px rgba(59, 130, 246, .3);
+    }
 
-    .btn-group>a {
-        margin-right: 10px;
-        /* Puedes ajustar el valor según tu preferencia */
+    .table {
+        border-radius: 12px;
+        overflow: hidden;
+        font-size: 0.95rem;
+    }
+
+    .table thead {
+        font-weight: 600;
+    }
+
+    .card {
+        border-radius: 12px;
     }
 
     .components-column {
-        max-width: 300px;
-        /* Puedes ajustar el valor según tus necesidades */
+        max-width: 320px;
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .badge {
+        font-weight: 500;
+        font-size: 0.8rem;
+        border-radius: 8px;
+        padding: 6px 10px;
+    }
+
+    .icon {
+        font-size: 18px;
+        vertical-align: middle;
+    }
+
+    .text-link {
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .text-link:hover {
+        text-decoration: underline;
     }
 </style>
 
 <body>
-    <h1><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Templates'); ?></h1>
+    <h2 class="fs-4 mb-3 d-flex align-items-center gap-2">
+        <span class="material-icons icon">description</span>
+        <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Templates'); ?>
+    </h2>
 
-    <div class="btn-group" role="group" aria-label="Acciones">
-        <a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/create'); ?>" class="btn btn-primary d-flex align-items-center">
-            <span class="material-icons mr-2">add_circle_outline</span>
-            <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Create template'); ?>
-        </a>
-        <a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/carousel'); ?>" class="btn btn-primary d-flex align-items-center">
-            <span class="material-icons mr-2">view_carousel</span>
-            <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Create carousel'); ?>
-        </a>
-        <span class="ms-3">
-            <span style="color: green;">Aprobada:</span> la plantilla pasó la revisión y se aprobó, y ahora se puede enviar en mensajes de plantilla.
-            <br />
-            <span style="color: rgba(255, 215, 0, 0.6);">Pendiente:</span> la plantilla pasó la validación de categoría y está en revisión.
-            <br />
-            <span style="color: red;">Rechazada:</span> la plantilla no pasó la validación de categoría o la revisión. Puedes conocer el motivo del rechazo.
-        </span>
+    <div class="row g-2 mb-3 align-items-center">
+
+        <!-- Columna izquierda: Acciones compactas -->
+        <div class="col-md-6">
+            <div class="d-grid gap-2">
+                <a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/create'); ?>"
+                    class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center gap-1">
+                    <span class="material-icons" style="font-size:18px;">add</span>
+                    <span>
+                        <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Create template'); ?>
+                    </span>
+                </a>
+
+                <a href="<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/carousel'); ?>"
+                    class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center gap-1">
+                    <span class="material-icons" style="font-size:18px;">view_carousel</span>
+                    <span>
+                        <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Create carousel'); ?>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Columna derecha: Estados compactos -->
+        <div class="col-md-6">
+            <div class="card border-0 bg-light h-100">
+                <div class="card-body p-2">
+                    <small class="d-flex flex-column gap-1 text-muted">
+
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-success">Aprobada</span>
+                            <span>Lista para envío</span>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                            <span>En revisión</span>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-danger">Rechazada</span>
+                            <span>No aprobada</span>
+                        </div>
+
+                    </small>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
 
-    <br><br>
-    </div>
     <?php
     // Comprueba si hay un mensaje de éxito en la variable de sesión
     if (isset($_SESSION['delete_template_message'])) {
@@ -244,22 +307,18 @@
             </a>
         </div>
     </form>
-
-
-
-
     <?php include(erLhcoreClassDesign::designtpl('lhkernel/paginator.tpl.php')); ?>
     <table class="table table-sm" ng-non-bindable>
         <thead>
             <tr>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Name'); ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('abstract/proactivechatinvitation', 'Category') ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Template type') ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('file/file', 'Content') ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Fecha de creación'); ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/pendingchats', 'Status') ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Idioma') ?></th>
-                <th><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Actions') ?></th>
+                <th>📛 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Name'); ?></th>
+                <th>🏷️ <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('abstract/proactivechatinvitation', 'Category') ?></th>
+                <th>📦 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Template type') ?></th>
+                <th>🧩 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('file/file', 'Content') ?></th>
+                <th>📅 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Fecha de creación'); ?></th>
+                <th>🔄 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/pendingchats', 'Status') ?></th>
+                <th>🌐 <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Idioma') ?></th>
+                <th>⚙️ <?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Actions') ?></th>
             </tr>
         </thead>
         <tbody>

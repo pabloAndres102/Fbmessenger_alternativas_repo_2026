@@ -1,6 +1,6 @@
 <style>
     .recuadro {
-        background: #000000ff;
+        
         border-radius: 12px;
         padding: 0;
         margin-bottom: 0;
@@ -22,7 +22,6 @@
     .columna-lectura .mini-recuadro span {
         font-size: 14px;
         /* texto de etiqueta un poco más pequeño */
-        color: #333;
         font-weight: 500;
     }
 
@@ -78,7 +77,7 @@
     .recuadro h6 {
         font-weight: bold;
         margin-bottom: 12px;
-        color: #333;
+
     }
 
     .info-stats-two-columns {
@@ -149,7 +148,7 @@
     }
 
     .recuadro {
-        background: #f5f8ff;
+        
         border: 1px solid #d6e4ff;
         padding: 20px;
         border-radius: 12px;
@@ -158,7 +157,7 @@
     }
 
     .mini-recuadro {
-        background: rgba(165, 214, 167, 0.25);
+
         /* 25% de opacidad */
         border: 1px solid rgba(165, 214, 167, 0.4);
         padding: 20px;
@@ -172,14 +171,13 @@
 
     .recuadro h1 {
         font-size: 32px;
-        color: #0d47a1;
         margin: 10px 0 0 0;
     }
 
     .recuadro p {
         font-size: 14px;
         font-weight: bold;
-        color: #444;
+
     }
 
     /* ======== Mini métricas (verde) ======== */
@@ -205,7 +203,6 @@
     }
 
     .grafico-card {
-        background: #ffffff;
         border-radius: 16px;
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
         padding: 24px;
@@ -215,7 +212,6 @@
 
     .grafico-card h6 {
         font-weight: 600;
-        color: #222;
         margin-bottom: 12px;
         text-align: center;
     }
@@ -231,7 +227,6 @@
     }
 
     .grafico-card {
-        background: #ffffff;
         border-radius: 12px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         padding: 20px;
@@ -241,12 +236,10 @@
 
     .grafico-card h6 {
         font-weight: 600;
-        color: #222;
         margin-bottom: 10px;
     }
 
     .grafico-wrapper {
-        background: #f9f9f9;
         border-radius: 16px;
         padding: 20px;
         position: relative;
@@ -265,7 +258,6 @@
         margin: 8px 0 5px 0;
         font-weight: bold;
         font-size: 13px;
-        color: #444;
         text-align: center;
     }
 
@@ -694,7 +686,6 @@ $tasaRebote = $totalConversations > 0 ? round((($rejectedCount + $pendingCount +
                 data: [dataRead, dataDelivered, dataSent],
                 backgroundColor: ['#2ECC71', '#F1C40F', '#E74C3C'],
                 borderWidth: 2,
-                borderColor: '#fff',
                 hoverOffset: 10,
             }]
         },
@@ -706,7 +697,7 @@ $tasaRebote = $totalConversations > 0 ? round((($rejectedCount + $pendingCount +
                 legend: {
                     position: 'bottom',
                     labels: {
-                        color: '#333',
+
                         font: {
                             size: 14,
                             weight: '500',
@@ -717,9 +708,6 @@ $tasaRebote = $totalConversations > 0 ? round((($rejectedCount + $pendingCount +
                     }
                 },
                 tooltip: {
-                    backgroundColor: '#333',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
                     cornerRadius: 8,
                     padding: 10,
                     callbacks: {
@@ -731,7 +719,7 @@ $tasaRebote = $totalConversations > 0 ? round((($rejectedCount + $pendingCount +
                     }
                 },
                 datalabels: {
-                    color: '#fff',
+
                     textStrokeColor: '#000',
                     textStrokeWidth: 2,
                     shadowBlur: 6,

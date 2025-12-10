@@ -64,7 +64,7 @@
         </div> -->
 
         <div class="col-2">
-            <label><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('system/buttons', 'Enabled'); ?></label>
+            <label><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('system/buttons', 'Status'); ?></label>
             <select name="enabled" class="form-control form-control-sm">
                 <option value=""><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('system/buttons', 'Choose'); ?></option>
                 <option <?php if ($input->enabled === '1') : ?>selected="selected" <?php endif; ?> value="1"><?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('system/buttons', 'Enabled'); ?></option>

@@ -899,6 +899,56 @@
                 "default": null,
                 "extra": ""
             }
+        ],
+        "lhc_fbmessenger_validators": [
+            {
+                "field": "id",
+                "type": "bigint(20) unsigned",
+                "null": "NO",
+                "key": "PRI",
+                "default": null,
+                "extra": "auto_increment"
+            },
+            {
+                "field": "month_year",
+                "type": "varchar(7)",
+                "null": "NO",
+                "key": "UNI",
+                "default": null,
+                "extra": ""
+            },
+            {
+                "field": "request_count",
+                "type": "int(11) unsigned",
+                "null": "NO",
+                "key": "",
+                "default": 1,
+                "extra": ""
+            },
+            {
+                "field": "created_at",
+                "type": "bigint(20) unsigned",
+                "null": "NO",
+                "key": "",
+                "default": null,
+                "extra": ""
+            },
+            {
+                "field": "email_request_count",
+                "type": "int(11) unsigned",
+                "null": "NO",
+                "key": "",
+                "default": 1,
+                "extra": ""
+            },
+            {
+                "field": "email_created_at",
+                "type": "bigint(20) unsigned",
+                "null": "NO",
+                "key": "",
+                "default": null,
+                "extra": ""
+            }
         ]
     },
     "tables_data": {},
@@ -953,6 +1003,7 @@
         "lhc_fbmessengerwhatsapp_template": "CREATE TABLE `lhc_fbmessengerwhatsapp_template` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,`template_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,`language` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,`category` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`components` longtext COLLATE utf8mb4_unicode_ci NOT NULL,`created_at` bigint(20) unsigned NOT NULL,`updated_at` bigint(20) unsigned NOT NULL,`user_id` bigint(20) unsigned NOT NULL DEFAULT 0,PRIMARY KEY (`id`),KEY `template_id` (`template_id`),KEY `name` (`name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
         "lhc_sns_sms_message": "CREATE TABLE `lhc_sns_sms_message` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`user_id` bigint(20) unsigned NOT NULL DEFAULT 0,`phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,`message` text COLLATE utf8mb4_unicode_ci NOT NULL,`campaign` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`scheduled_at` bigint(20) unsigned NOT NULL DEFAULT 0,`message_id` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'sent',`error` text COLLATE utf8mb4_unicode_ci,`created_at` bigint(20) unsigned NOT NULL,`updated_at` bigint(20) unsigned NOT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
         "lhc_sns_sms_campaign": "CREATE TABLE `lhc_sns_sms_campaign` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,`message` text COLLATE utf8mb4_unicode_ci NOT NULL,`phones` text COLLATE utf8mb4_unicode_ci NOT NULL,`status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',`scheduled_at` bigint(20) unsigned DEFAULT NULL,`sent_at` bigint(20) unsigned DEFAULT NULL,`created_at` bigint(20) unsigned NOT NULL,`updated_at` bigint(20) unsigned NOT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
-        "lhc_sns_sms_contact": "CREATE TABLE `lhc_sns_sms_contact` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`user_id` bigint(20) unsigned NOT NULL DEFAULT 0,`name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`lastname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,`email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`tags` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`disabled` tinyint(1) NOT NULL DEFAULT 0,`created_at` bigint(20) unsigned NOT NULL,`updated_at` bigint(20) unsigned NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY `phone_unique` (`phone`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+        "lhc_sns_sms_contact": "CREATE TABLE `lhc_sns_sms_contact` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`user_id` bigint(20) unsigned NOT NULL DEFAULT 0,`name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`lastname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,`email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`tags` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`disabled` tinyint(1) NOT NULL DEFAULT 0,`created_at` bigint(20) unsigned NOT NULL,`updated_at` bigint(20) unsigned NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY `phone_unique` (`phone`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+        "lhc_fbmessenger_validators": "CREATE TABLE `lhc_fbmessenger_validators` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`month_year` varchar(7) NOT NULL,`request_count` int(11) unsigned NOT NULL DEFAULT 0,`email_request_count` int(11) unsigned NOT NULL DEFAULT 0,`created_at` bigint(20) unsigned NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY `uniq_month` (`month_year`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
     }
 }

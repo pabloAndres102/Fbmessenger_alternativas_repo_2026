@@ -104,7 +104,7 @@
     </div>
 
     <!-- Email Validator -->
-    <div class="validator-card" onclick="location.href='<?php echo erLhcoreClassDesign::baseurl('validator/email'); ?>'">
+    <div class="validator-card" onclick="location.href='<?php echo erLhcoreClassDesign::baseurl('fbwhatsapp/validate_email'); ?>'">
         <div class="validator-icon">✉️</div>
         <div class="validator-title">Validador de Email</div>
         <div class="validator-desc">Comprueba si una dirección de correo electrónico es válida.</div>

@@ -7,6 +7,6 @@ $Result['content'] = $tpl->fetch();
 $Result['path'] = [
     [
         'url' => erLhcoreClassDesign::baseurl('validator/validator'),
-        'title' => erTranslationClassLhTranslation::getInstance()->getTranslation('module/validator', 'Validadores')
+        'title' => erTranslationClassLhTranslation::getInstance()->getTranslation('module/fbmessenger', 'Validators')
     ]
 ];

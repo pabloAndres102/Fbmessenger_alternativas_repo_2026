@@ -96,7 +96,6 @@ if (!empty($chatsId)) {
                 $message->campaign_recipient->send_at = time();
 
                 if (
-                    $message->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_FAILED ||
                     $message->status == \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_REJECTED
                 ) {
                     $message->campaign_recipient->status = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppCampaignRecipient::STATUS_FAILED;
