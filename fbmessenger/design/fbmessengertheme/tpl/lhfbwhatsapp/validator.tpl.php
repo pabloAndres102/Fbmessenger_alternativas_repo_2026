@@ -72,14 +72,6 @@
         margin-top: 20px;
     }
 
-    .page-header h2 {
-        color: #444;
-    }
-
-    .page-header p {
-        color: #666;
-    }
-
     @media (max-width: 700px) {
         .validator-container {
             flex-direction: column;

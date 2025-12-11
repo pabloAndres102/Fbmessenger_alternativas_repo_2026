@@ -10,7 +10,6 @@
         padding: 18px 22px;
         border-radius: 16px;
         background: linear-gradient(135deg, #25D366, #128C7E);
-        color: #fff;
         font-weight: bold;
         margin-bottom: 20px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
@@ -64,7 +63,6 @@
 
     .progress-bar {
         height: 100%;
-        background: #ffffff;
         border-radius: 50px;
         transition: width 0.4s ease;
     }
@@ -102,7 +100,6 @@
     textarea.form-control {
         width: 100%;
         border-radius: 8px;
-        border: 1px solid #ccc;
         padding: 10px;
         resize: vertical;
     }
@@ -136,11 +133,8 @@
     }
 </style>
 
-<div class="card" style="padding:20px; border-radius:12px; background:#f9f9f9;">
+<div class="card" style="padding:20px; border-radius:12px;">
     
-
-
-
     <?php
     $used = (int)($requestCount ?? 0);
     $limit = (int)($monthLimit ?? 5000);
@@ -178,7 +172,7 @@
     </div>
 
     <h3 style="margin-bottom:10px;">
-        <span style="color:#25D366;">📞</span> Validar números de WhatsApp
+        <span>📞</span> Validar números de WhatsApp
     </h3>
     <p>Introduce uno o varios números (separados por coma o salto de línea):</p>
 
@@ -188,7 +182,7 @@
         <div style="margin-top:10px;">
             <label for="csv_file"><strong>O importa un archivo CSV:</strong></label>
             <input type="file" name="csv_file" id="csv_file" accept=".csv" class="form-control" style="margin-top:5px;">
-            <small style="color:gray;">Formato: solo una columna llamada <code>NUMERO</code></small>
+            <small>Formato: solo una columna llamada <code>NUMERO</code></small>
         </div>
 
         <button type="submit" class="btn btn-primary mt-2">Validar / Importar</button>
@@ -205,7 +199,7 @@
         </div>
 
         <table id="resultsTable" class="table table-bordered" style="background:white; border-radius:8px; overflow:hidden; margin-top:10px;">
-            <thead style="background:#007bff; color:white;">
+            <thead>
                 <tr>
                     <th>Número</th>
                     <th>Estado</th>

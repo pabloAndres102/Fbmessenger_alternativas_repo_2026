@@ -6,7 +6,6 @@
         gap: 16px;
         padding: 18px 22px;
         border-radius: 16px;
-        color: #fff;
         font-weight: bold;
         margin-bottom: 20px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, .18);
@@ -84,7 +83,6 @@
         border: none;
         border-radius: 6px;
         padding: 6px 12px;
-        color: white;
     }
 
     .btn-success:hover {
@@ -144,7 +142,7 @@
     }
 </style>
 
-<div class="card" style="padding:20px; border-radius:12px; background:#f9f9f9;">
+<div class="card" style="padding:20px; border-radius:12px;">
     <?php if (!empty($no_access)): ?>
         <div style="
         background:#fff3f3;
@@ -205,7 +203,7 @@
 
 
     <h3 style="margin-bottom:10px;">
-        <span style="color:#007bff;">📧</span> Validador de Emails
+        <span>📧</span> Validador de Emails
     </h3>
     <p>Introduce uno o varios correos electrónicos (separados por coma o salto de línea):</p>
 
@@ -215,14 +213,14 @@
         <div style="margin-top:10px;">
             <label for="csv_file"><strong>O importa un archivo CSV:</strong></label>
             <input type="file" name="csv_file" id="csv_file" accept=".csv" class="form-control" style="margin-top:5px;">
-            <small style="color:gray;">Formato: debe tener una columna llamada <code>EMAIL</code></small>
+            <small>Formato: debe tener una columna llamada <code>EMAIL</code></small>
         </div>
 
         <button type="submit" class="btn btn-primary mt-2">Validar / Importar</button>
     </form>
 
     <?php if (isset($error)): ?>
-        <div style="color:red; font-weight:bold; margin-top:10px;"><?php echo htmlspecialchars($error) ?></div>
+        <div style="font-weight:bold; margin-top:10px;"><?php echo htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
     <?php if (isset($results)): ?>
@@ -232,7 +230,7 @@
         </div>
 
         <table id="resultsTable" class="table table-bordered" style="background:white; border-radius:8px; overflow:hidden; margin-top:10px;">
-            <thead style="background:#007bff; color:white;">
+            <thead>
                 <tr>
                     <th>Email</th>
                     <th>Estado</th>
