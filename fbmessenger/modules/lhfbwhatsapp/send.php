@@ -162,7 +162,7 @@ if (ezcInputForm::hasPostData()) {
     }
 
     if ($form->hasValidData('schedule_message') && $form->schedule_message == true) {
-        $item-> = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SCHEDULED;
+        $item->status = \LiveHelperChatExtension\fbmessenger\providers\erLhcoreClassModelMessageFBWhatsAppMessage::STATUS_SCHEDULED;
     }
 
     if ($form->hasValidData('scheduled_at')) {
